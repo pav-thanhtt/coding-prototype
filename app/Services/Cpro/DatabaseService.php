@@ -16,12 +16,7 @@ class DatabaseService
     public $tableDefault = [];
     public static function getAllTableName()
     {
-        $objectTable = DB::select('SHOW TABLES');
-        $listTable = [];
-        foreach ($objectTable as $table){
-            $listTable[] = $table -> Tables_in_allu;
-        }
-        return $listTable;
+        return  DB::getDoctrineSchemaManager()->listTableNames();
     }
 
     /**
@@ -34,15 +29,6 @@ class DatabaseService
     }
 
 
-    public static function getAllColumnName($table){
-        $tableDetail = self::getTableDetail($table);
-        $columnList = [];
-        foreach ($tableDetail as $row){
-            $columnList[] = $row -> Field;
-        }
-        return $columnList;
-
-    }
 
     public static function getTableFormatType($table){
         $data = self::getTableDetail($table);

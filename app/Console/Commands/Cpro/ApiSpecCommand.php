@@ -8,6 +8,8 @@ use App\Common\PathCommon;
 use App\Services\Cpro\ExportExcel\ExportApiDoc;
 use App\Services\Cpro\DatabaseService;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Config;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 
 class ApiSpecCommand extends Command
@@ -45,17 +47,36 @@ class ApiSpecCommand extends Command
     {
 
 
-        $con = explode("=", $this->argument('con')[1]);
+        $con = explode("=", $this->argument('con'))[1];
         $listTableName = explode(",", $this->option('table'));
 
+        // Check connection
+        try {
+            DB::connection($con);
+            Config::set('database.default', $con);
+        } catch (\Exception $e) {
+            $this->error("Could not connect to the database.  Please check your configuration");
+            return;
+        }
+
+        // check dir
         if (!File::isDirectory(PathCommon::EXCEL_API_SPEC)) {
 
             File::makeDirectory(PathCommon::EXCEL_API_SPEC, 0777, true, true);
 
         }
 
-        if ($listTableName[0] == "all"){
-            $listTableName = DatabaseService::getAllTableName();
+
+        $listTableConnect = DatabaseService::getAllTableName();
+        if ($listTableName[0] == "all") {
+            $listTableName = $listTableConnect;
+        } else {
+            $diffTables = array_diff($listTableName, $listTableConnect);
+            if (count($diffTables)) {
+                $notExistsTable = implode(',', $diffTables);
+                $this->error("Table '{$notExistsTable}' not exists in the database");
+                return;
+            }
         }
 
 

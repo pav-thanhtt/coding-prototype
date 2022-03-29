@@ -76,7 +76,7 @@ class ExportApiDoc extends ExcelService
 
         ];
 
-        return json_encode($data, JSON_PRETTY_PRINT);
+        return  str_replace("\/","/",json_encode($data, JSON_PRETTY_PRINT));
     }
 
     public function getJsonFailStore()
