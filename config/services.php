@@ -29,5 +29,45 @@ return [
         'secret' => env('AWS_SECRET_ACCESS_KEY'),
         'region' => env('AWS_DEFAULT_REGION', 'us-east-1'),
     ],
+    'db_doc' => [
+        'headers' => [
+            'table_name' => [
+                'header' => ['Table'],
+                'bgColor' => 'F9CB9C',
+                'coordinate' => ['A']
+            ],
+            'fields' => [
+                'header' => [
+                    'Field',
+                    'Type',
+                    'Default Value',
+                    'Unsigned',
+                    'Nullable',
+                    'Charset',
+                    'Collation',
+                    'Comments',
+                    'Note'
+                ],
+                'bgColor' => 'F9CB9C',
+                'coordinate' => range('A', 'I')
+            ],
+            'indexes' => [
+                'header' => ['Indexes'],
+                'bgColor' => 'C9DAF8',
+                'coordinate' => ['A']
+            ],
+            'indexes_detail' => [
+                'header' => ['Key', 'Type', 'Unique', 'Columns'],
+                'bgColor' => 'C9DAF8',
+                'coordinate' => range('A', 'D')
+            ],
+            'script' => [
+                'header' => ['Table Script'],
+                'bgColor' => 'FFF2CC',
+                'coordinate' => ['A']
+            ]
+        ],
+        'coordinate' => range('A', 'I')
+    ]
 
 ];
