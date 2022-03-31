@@ -1,0 +1,96 @@
+<?php
+
+declare(strict_types = 1);
+
+namespace App\Repositories;
+
+use App\Models\{{tableName(ClassNameSingular)}};
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
+
+class {{tableName(ClassNameSingular)}}Repository
+{
+    /**
+     * @var {{tableName(ClassNameSingular)}}
+     */
+    private {{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}Model;
+
+    public function __construct({{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}Model)
+    {
+        $this->{{tableName(PropertyName)}}Model = ${{tableName(PropertyName)}}Model;
+    }
+
+    /**
+     * @param $builder
+     * @param string $searchKey
+     *
+     * @return void
+     */
+    private function __search($builder, string $searchKey = ''): void
+    {
+        if (empty($searchKey)) {
+            return;
+        }
+
+        $searchFields = [
+{{renderSearchFields(3)}}
+        ];
+
+        $builder->where(function ($query) use ($searchFields, $searchKey) {
+            foreach ($searchFields as $searchItem) {
+                $query->orWhere($searchItem, $searchKey);
+            }
+        });
+    }
+
+    /**
+     * @param array $requestData
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getList(array $requestData): LengthAwarePaginator
+    {
+        ${{tableName(ParamNamePlural)}} = $this->{{tableName(PropertyName)}}Model->select(['*']);
+
+        $this->__search(${{tableName(ParamNamePlural)}}, $requestData['keyword'] ?? '');
+
+        return ${{tableName(ParamNamePlural)}}->paginate(
+            $requestData['per_page'] ?? config('constants.pagination.default.per_page'),
+            ['*'],
+            config('constants.pagination.default.title'),
+            $requestData['page'] ?? config('constants.pagination.default.page')
+        );
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return bool|Builder|Model
+     */
+    public function create(array $params): Model|Builder|bool
+    {
+        return $this->{{tableName(PropertyName)}}Model->create($params);
+    }
+
+    /**
+     * @param {{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}
+     * @param array $params
+     *
+     * @return bool
+     */
+    public function update({{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}, array $params): bool
+    {
+        return ${{tableName(PropertyName)}}->update($params);
+    }
+
+    /**
+     * @param {{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}
+     *
+     * @return bool
+     */
+    public function delete({{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}): bool
+    {
+        return ${{tableName(PropertyName)}}->delete();
+    }
+}

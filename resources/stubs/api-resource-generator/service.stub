@@ -1,0 +1,65 @@
+<?php
+
+declare(strict_types = 1);
+
+namespace App\Services;
+
+use App\Models\{{tableName(ClassNameSingular)}};
+use App\Repositories\{{tableName(ClassNameSingular)}}Repository;
+use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Pagination\LengthAwarePaginator;
+
+class {{tableName(ClassNameSingular)}}Service
+{
+    /**
+     * @var {{tableName(ClassNameSingular)}}Repository
+     */
+    private {{tableName(ClassNameSingular)}}Repository ${{tableName(PropertyName)}}Repo;
+
+    public function __construct({{tableName(ClassNameSingular)}}Repository ${{tableName(PropertyName)}}Repo)
+    {
+        $this->{{tableName(PropertyName)}}Repo = ${{tableName(PropertyName)}}Repo;
+    }
+
+    /**
+     * @param array $requestData
+     *
+     * @return LengthAwarePaginator
+     */
+    public function getList(array $requestData): LengthAwarePaginator
+    {
+        return $this->{{tableName(PropertyName)}}Repo->getList($requestData);
+    }
+
+    /**
+     * @param array $params
+     *
+     * @return bool|Builder|Model
+     */
+    public function create(array $params): Model|Builder|bool
+    {
+        return $this->{{tableName(PropertyName)}}Repo->create($params);
+    }
+
+    /**
+     * @param {{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}
+     * @param array $params
+     *
+     * @return bool
+     */
+    public function update({{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}, array $params): bool
+    {
+        return $this->{{tableName(PropertyName)}}Repo->update(${{tableName(PropertyName)}}, $params);
+    }
+
+    /**
+     * @param {{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}
+     *
+     * @return bool
+     */
+    public function delete({{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}): bool
+    {
+        return $this->{{tableName(PropertyName)}}Repo->delete(${{tableName(PropertyName)}});
+    }
+}
