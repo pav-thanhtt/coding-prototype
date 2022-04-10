@@ -38,26 +38,22 @@ class FactoryFormatter extends BaseFormatter
                 if ($this->isFactoryField($column)) {
                     $factoryFields[$column->getColumnName()] = '_@' . $this->factoryValue($column);
                 }
-            },
-            $factoryFields);
-        $factoryFields = $this->cleanArray($factoryFields, false);
+            });
 
         return $this->arrayRender($factoryFields, $indentTab, true);
     }
 
     private function isFactoryField(ColumnDefinition $column): bool
     {
-        if (
-            $column->getColumnName() === 'id' ||
-            $column->getColumnName() === 'created_at' ||
-            $column->getColumnName() === 'updated_at' ||
-            $column->getColumnName() === 'deleted_at' ||
+        $columnName = $column->getColumnName();
+        return !(
+            $columnName === 'id' ||
+            $columnName === 'created_at' ||
+            $columnName === 'updated_at' ||
+            $columnName === 'deleted_at' ||
             $column->isAutoIncrementing() ||
             ($this->isCurrent($column))
-        ) {
-            return false;
-        }
-        return true;
+        );
     }
 
     private function factoryValue(ColumnDefinition $column): string
@@ -146,11 +142,10 @@ class FactoryFormatter extends BaseFormatter
                 if ($isUUID) {
                     return '$this->faker->uuid()';
                 }
-                return "Str::random($params[0])";
+                return '$this->faker->regexify(\'[A-Za-z0-9]{' . $params[0] . '}\')';
+            case 'mediumtext':
             case 'tinytext':
                 return '$this->faker->text(255)';
-            case 'mediumtext':
-                return '$this->faker->text(16777215)';
             case 'longtext':
                 return '$this->faker->paragraph()';
             case 'text':
@@ -160,7 +155,7 @@ class FactoryFormatter extends BaseFormatter
                 return '$this->faker->randomElement([' . $enums . '])';
             default:
                 $length = 255;
-                if (count($params) === 1) {
+                if (count($params) === 1 && $params[0] < 255) {
                     $length = $params[0];
                 }
 
@@ -185,10 +180,6 @@ class FactoryFormatter extends BaseFormatter
 
                 if (Str::contains($columnName, 'address')) {
                     return '$this->faker->address()';
-                }
-
-                if (Str::contains($columnName, 'title')) {
-                    return '$this->faker->title()';
                 }
 
                 if (Str::contains($columnName, 'description')) {
@@ -223,20 +214,5 @@ class FactoryFormatter extends BaseFormatter
             'year' => '$this->faker->year()',
             default => 'now()',
         };
-    }
-
-    public function renderClassStrSupport($type): string
-    {
-        if ($this->hasUseStrSupport()) {
-            return "use Illuminate\Support\Str;\n";
-        }
-
-        return '';
-    }
-
-    private function hasUseStrSupport(): bool
-    {
-        $enumFields = DB::select("show columns from {$this->tableDefinition->getTableName()} where `Type` Like 'char%' && `Type` != 'char(36)';");
-        return count($enumFields) > 0;
     }
 }

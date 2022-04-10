@@ -4,24 +4,23 @@ namespace App\Utilities\Cpro\Formatters;
 
 use App\Utilities\Cpro\Definitions\ColumnDefinition;
 use App\Utilities\Cpro\Definitions\TableDefinition;
-use Illuminate\Support\Str;
 
 class RepositoryFormatter extends BaseFormatter
 {
     private const STUB_FILE_NAME = 'repository';
     private const EXPORT_FILE_NAME_SUFFIX = 'Repository.php';
 
-    protected array $searchFields;
+    protected array $sortFields;
 
     public function __construct(TableDefinition $tableDefinition)
     {
-        $searchFields = array_map(function ($column) {
-            if ($this->isSearchField($column)) {
+        $sortFields = array_map(function ($column) {
+            if ($this->isSortField($column)) {
                 return $column->getColumnName();
             }
         }, $tableDefinition->getColumns());
 
-        $this->searchFields = $this->cleanArray($searchFields);
+        $this->sortFields = $this->cleanArray($sortFields);
         parent::__construct($tableDefinition);
         $this->fileName[self::STUB_FILE_NAME] = $this->tableName('ClassNameSingular') . self::EXPORT_FILE_NAME_SUFFIX;
     }
@@ -37,16 +36,13 @@ class RepositoryFormatter extends BaseFormatter
         return $this->fileName[self::STUB_FILE_NAME];
     }
 
-    public function renderSearchFields(int $indentTab, $file): string
+    public function renderSortFields(int $indentTab, $file): string
     {
-        return $this->arrayRender($this->searchFields, $indentTab);
+        return $this->arrayRender($this->sortFields, $indentTab);
     }
 
-    private function isSearchField(ColumnDefinition $column): bool
+    private function isSortField(ColumnDefinition $column): bool
     {
-        if ($this->isTextType($column) && !$this->isHidden($column)) {
-            return true;
-        }
-        return false;
+        return !$this->isHidden($column) && 'deleted_at' !== $column->getColumnName();
     }
 }

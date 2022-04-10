@@ -13,8 +13,6 @@ abstract class BaseGeneratorManager implements GeneratorManagerInterface
 
     protected array $tableDefinitions = [];
 
-    protected array $formatters = [];
-
     abstract public function init(array $tables);
 
     /**
@@ -28,21 +26,6 @@ abstract class BaseGeneratorManager implements GeneratorManagerInterface
     public function addTableDefinition(TableDefinition $tableDefinition): BaseGeneratorManager
     {
         $this->tableDefinitions[] = $tableDefinition;
-
-        return $this;
-    }
-
-    /**
-     * @return array
-     */
-    public function getFormatters(): array
-    {
-        return $this->formatters;
-    }
-
-    public function addFormatters(Formatter $formatters): BaseGeneratorManager
-    {
-        $this->formatters[] = $formatters;
 
         return $this;
     }

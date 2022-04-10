@@ -16,6 +16,7 @@ class Formatter
     public FactoryFormatter $factoryFormatter;
     public ResourceFormatter $resourceFormatter;
     public SeederFormatter $seederFormatter;
+    public FilterFormatter $filterFormatter;
 
 
     public static function init(TableDefinition $tableDefinition): static
@@ -30,6 +31,7 @@ class Formatter
         $formatter->controllerFormatter = new ControllerFormatter($tableDefinition);
         $formatter->requestFormatter = new RequestFormatter($tableDefinition);
         $formatter->resourceFormatter = new ResourceFormatter($tableDefinition);
+        $formatter->filterFormatter = new FilterFormatter($tableDefinition);
 
         return $formatter;
     }

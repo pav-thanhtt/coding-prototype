@@ -54,34 +54,29 @@ class GenerateApiResourcesCommand extends Command
     /**
      * Execute the console command.
      *
-     * @return int
+     * @return void
      */
-    public function handle(): int
+    public function handle()
     {
         try {
             $connection = $this->getConnection();
+            $this->info('Using connection ' . $connection);
+
+            DB::setDefaultConnection($connection);
+
+            $driver = Config::get('database.connections.' . $connection)['driver'];
+
+            $tables = $this->getTables();
+
+            $manager = $this->resolveGeneratorManager($driver);
+
+            $manager->handle($tables);
+            $generateService = new GenerateApiResourcesService($manager->getTableDefinitions(), $this);
+
+            $this->info($generateService->exportResource());
         } catch (Exception $e) {
             $this->error($e->getMessage());
-
-            return 1;
         }
-
-        $this->info('Using connection ' . $connection);
-        DB::setDefaultConnection($connection);
-
-        $driver = Config::get('database.connections.' . $connection)['driver'];
-
-        $tables = $this->getTables();
-
-        $manager = $this->resolveGeneratorManager($driver);
-
-        $manager->handle($tables);
-
-        $generateService = new GenerateApiResourcesService($manager->getFormatters(), $this);
-
-        $this->info($generateService->exportResource());
-
-        return 0;
     }
 
     /**

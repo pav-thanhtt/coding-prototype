@@ -80,11 +80,11 @@ class ModelFormatter extends BaseFormatter
 
     private function hasSoftDeletes(): bool
     {
-        if (!is_null($deleteColumn = $this->tableDefinition->getColumnByName('deleted_at'))) {
-            return $deleteColumn->isNullable() &&
-                ($deleteColumn->getColumnDataType() === 'timestamp' || $deleteColumn->getColumnDataType() === 'datetime');
-        }
-
-        return false;
+        $deleteColumn = $this->tableDefinition->getColumnByName('deleted_at');
+        return (
+            !is_null($deleteColumn) &&
+            $deleteColumn->isNullable() &&
+            ($deleteColumn->getColumnDataType() === 'timestamp' || $deleteColumn->getColumnDataType() === 'datetime')
+        );
     }
 }

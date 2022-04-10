@@ -41,27 +41,40 @@ class RequestFormatter extends BaseFormatter
 
     public function renderRules(int $indentTab, $type): string
     {
+        $rules = [];
+        $columns = $this->tableDefinition->getColumns();
         if ($type === 'search_request') {
             $rules = [
                 'page' => 'int|min:1',
                 'per_page' => 'int|min:1',
                 'keyword' => 'string',
                 'include' => '_@Rule::in([\'meta\'])',
+                'sort_field' => 'string',
+                'sort_direction' => '_@Rule::in([\'desc\', \'asc\'])',
             ];
+
+            array_walk($columns,
+                function ($column) use (&$rules) {
+                    if ($this->isMethodFilter($column)) {
+                        $columnName = $column->getColumnName();
+                        if (Str::contains($columnName, '_at')) {
+                            $rules["start_{$columnName}"] = 'date|date_format:Y/m/d';
+                            $rules["end_{$columnName}"] = 'date|date_format:Y/m/d';
+                        } else {
+                            $rules[$columnName] = $this->searchRuleValue($column);
+                        }
+                    }
+                });
+
             return $this->arrayRender($rules, $indentTab, true);
         }
-        $rules = [];
 
-        $columns = $this->tableDefinition->getColumns();
         array_walk($columns,
             function ($column) use (&$rules) {
                 if ($this->isValidateField($column)) {
                     $rules[$column->getColumnName()] = $this->ruleValue($column);
                 }
-            },
-            $rules);
-
-        $rules = $this->cleanArray($rules, false);
+            });
 
         if ($type === 'store_request') {
             $rules = array_map(function ($rule) {
@@ -83,17 +96,16 @@ class RequestFormatter extends BaseFormatter
     {
         $columnName = $column->getColumnName();
         $columnType = $column->getColumnDataType();
-        if (
+        return !(
             $columnName === 'id' ||
             $column->isAutoIncrementing() ||
             $this->isCurrent($column) ||
-            (($column->getColumnDataType() === 'timestamp' || $columnType === 'datetime')
-                && preg_match('/_at$/', $columnName)) ||
-            Str::contains($columnName, 'token')
-        ) {
-            return false;
-        }
-        return true;
+            Str::contains($columnName, 'token') ||
+            (
+                ($columnType === 'timestamp' || $columnType === 'datetime')
+                && preg_match('/_at$/', $columnName)
+            )
+        );
     }
 
     private function ruleValue(ColumnDefinition $column): string|array
@@ -262,5 +274,19 @@ class RequestFormatter extends BaseFormatter
         }
         $enumFields = DB::select("show columns from {$this->tableDefinition->getTableName()} where `Type` Like 'enum%';");
         return count($enumFields) > 0;
+    }
+
+    private function searchRuleValue(ColumnDefinition $column): string
+    {
+        $rule = '';
+
+        if ($this->isNumberType($column)) {
+            $rule = $this->renderRuleNumber($column->getColumnDataType(), $column->getMethodParameters(), $column->isUnsigned());
+        }
+
+        if ($this->isTextType($column)) {
+            $rule = $this->renderRuleString($column->getColumnName(), $column->getColumnDataType(), $column->getMethodParameters(), $column->isUUID());
+        }
+        return $rule;
     }
 }

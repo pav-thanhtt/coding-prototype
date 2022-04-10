@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 abstract class BaseGenerateApiResourcesService
 {
-    protected array $formatters;
+    protected array $tableDefinitions;
 
     protected GenerateApiResourcesCommand $command;
 
@@ -32,9 +32,9 @@ abstract class BaseGenerateApiResourcesService
         5 => 'Exit'
     ];
 
-    public function __construct(array $formatters, GenerateApiResourcesCommand $command)
+    public function __construct(array $tableDefinitions, GenerateApiResourcesCommand $command)
     {
-        $this->formatters = $formatters;
+        $this->tableDefinitions = $tableDefinitions;
         $this->command = $command;
     }
 

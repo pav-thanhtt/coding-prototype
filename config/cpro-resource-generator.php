@@ -11,6 +11,7 @@ return [
     'controller_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_CONTROLLER_OUTPUT_PATH', '/allu/Controllers'),
     'request_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_REQUEST_OUTPUT_PATH', '/allu/Requests'),
     'resource_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_RESOURCE_OUTPUT_PATH', '/allu/Resources'),
+    'filter_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_FILTER_OUTPUT_PATH', '/allu/ModelFilters'),
 
 //    table except
     'table_excepts' => env('CPRO_TABLE_EXCEPTS', 'migrations,failed_jobs,password_resets,personal_access_tokens'),
@@ -29,5 +30,6 @@ return [
         'search_request' => 'request',
         'store_request' => 'request',
         'update_request' => 'request',
+        'filter' => 'filter',
     ]
 ];

@@ -41,8 +41,7 @@ class MySQLGeneratorManager extends BaseGeneratorManager
                 $this->command->warn("Table $table not exists!");
                 continue;
             }
-            $tableDefinition = TableGenerator::init($table)->definition();
-            $this->addTableDefinition($tableDefinition)->addFormatters(Formatter::init($tableDefinition));
+            $this->addTableDefinition(TableGenerator::init($table)->definition());
         }
     }
 }

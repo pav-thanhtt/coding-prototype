@@ -22,26 +22,26 @@ class {{tableName(ClassNameSingular)}}Repository
     }
 
     /**
-     * @param $builder
-     * @param string $searchKey
+     * @param Builder $builder
+     * @param array $requestData
      *
-     * @return void
+     * @return Builder
      */
-    private function __search($builder, string $searchKey = ''): void
+    private function __sort(Builder $builder, array $requestData): Builder
     {
-        if (empty($searchKey)) {
-            return;
-        }
+        $sortField = isset($requestData['sort_field']) && !empty($requestData['sort_field']) ? $requestData['sort_field'] : 'updated_at';
 
-        $searchFields = [
-{{renderSearchFields(3)}}
+        $direction = isset($requestData['sort_direction']) && !empty($requestData['sort_direction']) ? $requestData['sort_direction'] : 'desc';
+
+        $sortColumns = [
+{{renderSortFields(3)}}
         ];
 
-        $builder->where(function ($query) use ($searchFields, $searchKey) {
-            foreach ($searchFields as $searchItem) {
-                $query->orWhere($searchItem, $searchKey);
-            }
-        });
+        if (in_array($sortField, $sortColumns, true)) {
+            $builder = $builder->orderBy($sortField, $direction);
+        }
+
+        return $builder;
     }
 
     /**
@@ -51,16 +51,11 @@ class {{tableName(ClassNameSingular)}}Repository
      */
     public function getList(array $requestData): LengthAwarePaginator
     {
-        ${{tableName(ParamNamePlural)}} = $this->{{tableName(PropertyName)}}Model->select(['*']);
+        $perPage = $requestData['per_page'] ?? config('eloquentfilter.paginate_limit');
 
-        $this->__search(${{tableName(ParamNamePlural)}}, $requestData['keyword'] ?? '');
+        ${{tableName(ParamNamePlural)}} = $this->{{tableName(PropertyName)}}Model->filter($requestData);
 
-        return ${{tableName(ParamNamePlural)}}->paginate(
-            $requestData['per_page'] ?? config('constants.pagination.default.per_page'),
-            ['*'],
-            config('constants.pagination.default.title'),
-            $requestData['page'] ?? config('constants.pagination.default.page')
-        );
+        return $this->__sort(${{tableName(ParamNamePlural)}}, $requestData)->paginate($perPage);
     }
 
     /**

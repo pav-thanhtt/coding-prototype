@@ -2,6 +2,8 @@
 
 namespace App\Services\Cpro;
 
+use App\Utilities\Cpro\Formatters\Formatter;
+
 class GenerateApiResourcesService extends BaseGenerateApiResourcesService
 {
     /**
@@ -9,11 +11,12 @@ class GenerateApiResourcesService extends BaseGenerateApiResourcesService
      */
     public function exportResource(): string
     {
-        if (empty($this->formatters)) {
-            return '<fg=red>List table is empty</>';
+        if (empty($this->tableDefinitions)) {
+            return '<fg=red>Table list is empty</>';
         }
         $resourceFileMap = config('cpro-resource-generator.resource_file_map');
-        foreach ($this->formatters as $formatter) {
+        foreach ($this->tableDefinitions as $tableDefinition) {
+            $formatter = Formatter::init($tableDefinition);
             $this->command->info("Start export resource of table <fg=yellow>{$formatter->tableName}</>");
             foreach ($resourceFileMap as $type => $file) {
                 if ($this->isExit) {

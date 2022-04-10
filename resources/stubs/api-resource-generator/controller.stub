@@ -31,7 +31,7 @@ class {{tableName(ClassNameSingular)}}Controller extends Controller
     }
 
     /**
-     * Display a listing of the user banks.
+     * Display a listing of the resource.
      *
      * @param {{tableName(ClassNameSingular)}}SearchRequest $request
      *
@@ -42,7 +42,7 @@ class {{tableName(ClassNameSingular)}}Controller extends Controller
         ${{tableName(ParamNamePlural)}} = $this->{{tableName(PropertyName)}}Service->getList($request->validated());
 
         $meta = [];
-        if ($request->has('include') && $request->query('include') === 'meta') {
+        if ('meta' === $request->query('include')) {
             $meta = ['meta' => new MetaResource(${{tableName(ParamNamePlural)}})];
         }
 

@@ -15,3 +15,4 @@ yarn-error.log
 /.vscode
 /tests/database
 /resources/stubs/vendor
+/storage/allu

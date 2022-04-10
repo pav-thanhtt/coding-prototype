@@ -2,6 +2,7 @@
 
 namespace App\Utilities\Cpro\Formatters;
 
+use App\Utilities\Cpro\Definitions\ColumnDefinition;
 use App\Utilities\Cpro\Definitions\TableDefinition;
 
 class ResourceFormatter extends BaseFormatter
@@ -32,13 +33,20 @@ class ResourceFormatter extends BaseFormatter
         $columns = $this->tableDefinition->getColumns();
         array_walk($columns,
             function ($column) use (&$resources) {
-                if (!$this->isHidden($column)) {
+                if (!$this->isHidden($column) && !$this->isSoftDeletes($column)) {
                     $resources[$column->getColumnName()] = '_@$this->' . $column->getColumnName();
                 }
-            },
-            $resources);
-        $resources = $this->cleanArray($resources, false);
+            });
 
         return $this->arrayRender($resources, $indentTab, true);
+    }
+
+    private function isSoftDeletes(ColumnDefinition $column): bool
+    {
+        return (
+            $column->getColumnName() === 'deleted_at' &&
+            $column->isNullable() &&
+            ($column->getColumnDataType() === 'timestamp' || $column->getColumnDataType() === 'datetime')
+        );
     }
 }

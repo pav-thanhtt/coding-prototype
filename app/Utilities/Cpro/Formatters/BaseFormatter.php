@@ -91,26 +91,61 @@ abstract class BaseFormatter
         return rtrim($resultString, "\n");
     }
 
+    /**
+     * @param array $methods
+     * @param int $indentTab
+     * @return string
+     */
+    public function methodRender(array $methods = [], int $indentTab = 0): string
+    {
+        $resultString = "\n";
+
+        foreach ($methods as $method) {
+            $params = implode(', ', $method['params']);
+            $return = '';
+            if (isset($method['hasComment']) && $method['hasComment']) {
+                $resultString .= $this->parseComment($method, $indentTab);
+                $return = $method['returnType'] !== 0 ? ": {$method['returnType']}" : ": mixed";
+            }
+            $resultString .= "{$this->indentSpace($indentTab)}{$method['scope']} function {$method['methodName']}({$params}){$return}\n";
+            $resultString .= "{$this->indentSpace($indentTab)}{\n";
+            $resultString .= "{$this->indentSpace($indentTab + 1)}{$method['content']}\n";
+            $resultString .= "{$this->indentSpace($indentTab)}}\n\n";
+        }
+
+        return rtrim($resultString, "\n");
+    }
 
     protected function isFillable(ColumnDefinition $column): bool
     {
         $dataType = $column->getColumnDataType();
         $colName = $column->getColumnName();
 
-        if ($colName === 'id' || Str::contains($colName, 'token') || $this->isCurrent($column)) {
-            return false;
-        }
-        if (
-            (($dataType === 'timestamp' || $dataType === 'datetime') && preg_match('/_at$/', $colName))
-        ) {
-            return false;
-        }
-        return true;
+        return !(
+            $colName === 'id' ||
+            Str::contains($colName, 'token') ||
+            $this->isCurrent($column) ||
+            (
+                ($dataType === 'timestamp' || $dataType === 'datetime') &&
+                preg_match('/_at$/', $colName)
+            )
+        );
     }
 
     protected function isHidden(ColumnDefinition $column): bool
     {
         return Str::contains($column->getColumnName(), ['password', 'token']);
+    }
+
+    protected function isMethodFilter(ColumnDefinition $column): bool
+    {
+        $columnName = $column->getColumnName();
+        $dataType = $column->getColumnDataType();
+
+        return Str::contains($columnName, '_id') ||
+            'deleted_at' !== $columnName && 'updated_at' !== $columnName &&
+            Str::contains($columnName, '_at') &&
+            ($dataType === 'timestamp' || $dataType === 'datetime');
     }
 
     protected function isTextType(ColumnDefinition $column): bool
@@ -193,5 +228,22 @@ abstract class BaseFormatter
             return Str::replace($matchPrefix[0], '', $value);
         }
         return $this->singleQuotes($value);
+    }
+
+    private function parseComment($method, $indentTab = 0): string
+    {
+        $comment = "{$this->indentSpace($indentTab)}/**\n";
+        if (!empty($method['params'])) {
+            $comment .= implode("", array_map(fn($param) => "{$this->indentSpace($indentTab)}* @param {$param}\n", $method['params']));
+        }
+        if (isset($method['returnType']) && 0 !== $method['returnType']) {
+            $comment .= "{$this->indentSpace($indentTab)}* @return {$method['returnType']}\n";
+        } else {
+            $comment .= "{$this->indentSpace($indentTab)}* @return mixed\n";
+        }
+
+        $comment .= "{$this->indentSpace($indentTab)}*/\n";
+
+        return $comment;
     }
 }
