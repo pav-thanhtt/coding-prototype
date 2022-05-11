@@ -4,9 +4,9 @@ declare(strict_types = 1);
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\{{tableName(ClassNamePlural)}}\{{tableName(ClassNameSingular)}}SearchRequest;
-use App\Http\Requests\{{tableName(ClassNamePlural)}}\{{tableName(ClassNameSingular)}}StoreRequest;
-use App\Http\Requests\{{tableName(ClassNamePlural)}}\{{tableName(ClassNameSingular)}}UpdateRequest;
+use App\Http\Requests\{{tableName(ClassNameSingular)}}\{{tableName(ClassNameSingular)}}SearchRequest;
+use App\Http\Requests\{{tableName(ClassNameSingular)}}\{{tableName(ClassNameSingular)}}StoreRequest;
+use App\Http\Requests\{{tableName(ClassNameSingular)}}\{{tableName(ClassNameSingular)}}UpdateRequest;
 use App\Http\Resources\MetaResource;
 use App\Http\Resources\{{tableName(ClassNameSingular)}}Resource;
 use App\Models\{{tableName(ClassNameSingular)}};

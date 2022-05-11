@@ -12,7 +12,7 @@ class SeederFormatter extends BaseFormatter
     public function __construct(TableDefinition $tableDefinition)
     {
         parent::__construct($tableDefinition);
-        $this->fileName[self::STUB_FILE_NAME] = $this->tableName('ClassNamePlural') . self::EXPORT_FILE_NAME_SUFFIX;
+        $this->fileName[self::STUB_FILE_NAME] = $this->tableName('ClassNameSingular') . self::EXPORT_FILE_NAME_SUFFIX;
     }
 
     protected function getStubFileName(): string

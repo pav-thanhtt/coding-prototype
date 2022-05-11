@@ -29,8 +29,8 @@ class FilterFormatter extends BaseFormatter
 
                 if ($this->isMethodFilter($column)) {
                     if (Str::contains($columnName, '_at')) {
-                        $methodFilters[] = $this->parseMethod($columnName, 'start');
-                        $methodFilters[] = $this->parseMethod($columnName, 'end');
+                        $methodFilters[] = $this->parseMethod($columnName, 'from');
+                        $methodFilters[] = $this->parseMethod($columnName, 'to');
                     } else {
                         $methodFilters[] = $this->parseMethod($columnName);
                     }
@@ -75,8 +75,8 @@ class FilterFormatter extends BaseFormatter
         $content = 'return $this->where(\'' . $columnName . '\', $value);';
 
         if (!empty($support)) {
-            $methodName = Str::camel("{$support}_{$methodName}");
-            if ('start' === $support) {
+            $methodName = Str::camel("{$methodName}_{$support}");
+            if ('from' === $support) {
                 $content = 'return $this->whereDate(\'' . $columnName . '\', \'>=\', $value);';
             } else {
                 $content = 'return $this->whereDate(\'' . $columnName . '\', \'<=\', $value);';

@@ -184,6 +184,9 @@ abstract class BaseFormatter
             case 'PropertyName':
                 $tableName = Str::camel(Str::singular($tableName));
                 break;
+            case 'ClassNameSingularRequest':
+                $tableName = Str::ucfirst(Str::camel(Str::singular($tableName)));
+                break;
             default:
                 $suffix = match ($file) {
                     'search_request' => 'Search',

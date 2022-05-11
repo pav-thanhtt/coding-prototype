@@ -29,37 +29,37 @@ class {{tableName(ClassNameSingular)}}Service
      */
     public function getList(array $requestData): LengthAwarePaginator
     {
-        return $this->{{tableName(PropertyName)}}Repo->getList($requestData);
+        return $this->{{tableName(PropertyName)}}Repo->getFilteredPaginator($requestData);
     }
 
     /**
-     * @param array $params
+     * @param array $requestData
      *
-     * @return bool|Builder|Model
+     * @return Builder|Model
      */
-    public function create(array $params): Model|Builder|bool
+    public function create(array $requestData): Builder|Model
     {
-        return $this->{{tableName(PropertyName)}}Repo->create($params);
-    }
-
-    /**
-     * @param {{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}
-     * @param array $params
-     *
-     * @return bool
-     */
-    public function update({{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}, array $params): bool
-    {
-        return $this->{{tableName(PropertyName)}}Repo->update(${{tableName(PropertyName)}}, $params);
+        return $this->{{tableName(PropertyName)}}Repo->updateOrCreate(['id' => null], $requestData);
     }
 
     /**
      * @param {{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}
+     * @param array $requestData
      *
-     * @return bool
+     * @return Builder|Model
      */
-    public function delete({{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}): bool
+    public function update({{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}, array $requestData): Builder|Model
     {
-        return $this->{{tableName(PropertyName)}}Repo->delete(${{tableName(PropertyName)}});
+        return $this->{{tableName(PropertyName)}}Repo->updateOrCreate(['id' => ${{tableName(PropertyName)}}->id], $requestData);
+    }
+
+    /**
+     * @param {{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}
+     *
+     * @return mixed
+     */
+    public function delete({{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}): mixed
+    {
+        return $this->{{tableName(PropertyName)}}Repo->destroy(${{tableName(PropertyName)}}->id);
     }
 }

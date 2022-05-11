@@ -6,8 +6,6 @@ namespace App\Repositories;
 
 use App\Models\{{tableName(ClassNameSingular)}};
 use Illuminate\Database\Eloquent\Builder;
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Pagination\LengthAwarePaginator;
 
 class {{tableName(ClassNameSingular)}}Repository
 {
@@ -29,9 +27,9 @@ class {{tableName(ClassNameSingular)}}Repository
      */
     private function __sort(Builder $builder, array $requestData): Builder
     {
-        $sortField = isset($requestData['sort_field']) && !empty($requestData['sort_field']) ? $requestData['sort_field'] : 'updated_at';
+        $sortField = isset($requestData['sort_field']) && ! empty($requestData['sort_field']) ? $requestData['sort_field'] : 'updated_at';
 
-        $direction = isset($requestData['sort_direction']) && !empty($requestData['sort_direction']) ? $requestData['sort_direction'] : 'desc';
+        $direction = isset($requestData['sort_direction']) && ! empty($requestData['sort_direction']) ? $requestData['sort_direction'] : 'desc';
 
         $sortColumns = [
 {{renderSortFields(3)}}
@@ -44,12 +42,23 @@ class {{tableName(ClassNameSingular)}}Repository
         return $builder;
     }
 
-    /**
-     * @param array $requestData
-     *
-     * @return LengthAwarePaginator
-     */
-    public function getList(array $requestData): LengthAwarePaginator
+    public function getAll()
+    {
+        return $this->{{tableName(PropertyName)}}Model->all();
+    }
+
+    public function getFiltered(array $requestData, $returnFirstFlg = false)
+    {
+        $builder = $this->{{tableName(PropertyName)}}Model->filter($requestData);
+
+        if ($returnFirstFlg) {
+            return $builder->first();
+        }
+
+        return $this->__sort($builder, $requestData)->get();
+    }
+
+    public function getFilteredPaginator(array $requestData)
     {
         $perPage = $requestData['per_page'] ?? config('eloquentfilter.paginate_limit');
 
@@ -58,34 +67,18 @@ class {{tableName(ClassNameSingular)}}Repository
         return $this->__sort(${{tableName(ParamNamePlural)}}, $requestData)->paginate($perPage);
     }
 
-    /**
-     * @param array $params
-     *
-     * @return bool|Builder|Model
-     */
-    public function create(array $params): Model|Builder|bool
+    public function getByPK(int $id)
     {
-        return $this->{{tableName(PropertyName)}}Model->create($params);
+        return $this->{{tableName(PropertyName)}}Model->find($id);
     }
 
-    /**
-     * @param {{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}
-     * @param array $params
-     *
-     * @return bool
-     */
-    public function update({{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}, array $params): bool
+    public function updateOrCreate(array $attributes, array $values = [])
     {
-        return ${{tableName(PropertyName)}}->update($params);
+        return $this->{{tableName(PropertyName)}}Model->updateOrCreate($attributes, $values);
     }
 
-    /**
-     * @param {{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}
-     *
-     * @return bool
-     */
-    public function delete({{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}): bool
+    public function destroy(int | array $ids)
     {
-        return ${{tableName(PropertyName)}}->delete();
+        return $this->{{tableName(PropertyName)}}Model->destroy($ids);
     }
 }

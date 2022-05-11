@@ -36,7 +36,7 @@ class RequestFormatter extends BaseFormatter
 
     public function getExportDirName(): string
     {
-        return $this->tableName('ClassNamePlural');
+        return $this->tableName('ClassNameSingular');
     }
 
     public function renderRules(int $indentTab, $type): string
@@ -58,8 +58,8 @@ class RequestFormatter extends BaseFormatter
                     if ($this->isMethodFilter($column)) {
                         $columnName = $column->getColumnName();
                         if (Str::contains($columnName, '_at')) {
-                            $rules["start_{$columnName}"] = 'date|date_format:Y/m/d';
-                            $rules["end_{$columnName}"] = 'date|date_format:Y/m/d';
+                            $rules["{$columnName}_from"] = 'date|date_format:Y/m/d';
+                            $rules["{$columnName}_to"] = 'date|date_format:Y/m/d';
                         } else {
                             $rules[$columnName] = $this->searchRuleValue($column);
                         }
