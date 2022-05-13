@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace App\Http\Requests\{{tableName(ClassNameSingularRequest)}};
+namespace App\Http\Requests\Api\{{tableName(ClassNameSingularRequest)}};
 
 use Illuminate\Foundation\Http\FormRequest;
 {{renderClassRule}}

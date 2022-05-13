@@ -7,10 +7,10 @@ return [
     'seeder_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_SEEDER_OUTPUT_PATH', '/allu/seeders'),
     'model_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_MODEL_OUTPUT_PATH', '/allu/Models'),
     'repository_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_REPOSITORY_OUTPUT_PATH', '/allu/Repositories'),
-    'service_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_SERVICE_OUTPUT_PATH', '/allu/Services'),
-    'controller_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_CONTROLLER_OUTPUT_PATH', '/allu/Controllers'),
-    'request_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_REQUEST_OUTPUT_PATH', '/allu/Requests'),
-    'resource_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_RESOURCE_OUTPUT_PATH', '/allu/Resources'),
+    'service_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_SERVICE_OUTPUT_PATH', '/allu/Services/Api'),
+    'controller_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_CONTROLLER_OUTPUT_PATH', '/allu/Controllers/Api/V1'),
+    'request_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_REQUEST_OUTPUT_PATH', '/allu/Requests/Api'),
+    'resource_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_RESOURCE_OUTPUT_PATH', '/allu/Resources/Api'),
     'filter_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_FILTER_OUTPUT_PATH', '/allu/ModelFilters'),
 
 //    table except

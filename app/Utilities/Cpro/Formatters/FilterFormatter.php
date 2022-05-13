@@ -75,13 +75,16 @@ class FilterFormatter extends BaseFormatter
         $content = 'return $this->where(\'' . $columnName . '\', $value);';
 
         if (!empty($support)) {
-            $methodName = Str::camel("{$methodName}_{$support}");
+            $methodName = "{$methodName}_{$support}";
             if ('from' === $support) {
                 $content = 'return $this->whereDate(\'' . $columnName . '\', \'>=\', $value);';
             } else {
                 $content = 'return $this->whereDate(\'' . $columnName . '\', \'<=\', $value);';
             }
+        } elseif (preg_match('/_id$/', $methodName)) {
+            $methodName = preg_replace('/_id$/', '', $methodName);
         }
+        $methodName = Str::camel($methodName);
 
         return [
             'hasComment' => false,

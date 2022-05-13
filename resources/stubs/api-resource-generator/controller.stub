@@ -2,19 +2,23 @@
 
 declare(strict_types = 1);
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Api\V1;
 
-use App\Http\Requests\{{tableName(ClassNameSingular)}}\{{tableName(ClassNameSingular)}}SearchRequest;
-use App\Http\Requests\{{tableName(ClassNameSingular)}}\{{tableName(ClassNameSingular)}}StoreRequest;
-use App\Http\Requests\{{tableName(ClassNameSingular)}}\{{tableName(ClassNameSingular)}}UpdateRequest;
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\{{tableName(ClassNameSingular)}}\{{tableName(ClassNameSingular)}}SearchRequest;
+use App\Http\Requests\Api\{{tableName(ClassNameSingular)}}\{{tableName(ClassNameSingular)}}StoreRequest;
+use App\Http\Requests\Api\{{tableName(ClassNameSingular)}}\{{tableName(ClassNameSingular)}}UpdateRequest;
 use App\Http\Resources\MetaResource;
-use App\Http\Resources\{{tableName(ClassNameSingular)}}Resource;
+use App\Http\Resources\Api\{{tableName(ClassNameSingular)}}Resource;
 use App\Models\{{tableName(ClassNameSingular)}};
-use App\Services\{{tableName(ClassNameSingular)}}Service;
+use App\Services\Api\{{tableName(ClassNameSingular)}}Service;
+use App\Traits\ResponseTrait;
 use Illuminate\Http\JsonResponse;
 
 class {{tableName(ClassNameSingular)}}Controller extends Controller
 {
+    use ResponseTrait;
+
     /**
      * @var {{tableName(ClassNameSingular)}}Service
      */
