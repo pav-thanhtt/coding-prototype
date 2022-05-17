@@ -1,25 +1,27 @@
 <?php
 
+$outputPath = env('CPRO_OUTPUT_PATH', 'storage/allu');
+$stubPath = env('CPRO_STUB_DIR', 'stubs/api-resource-generator');
+
 return [
-//    output path
-    'output_path' => env('CPRO_OUTPUT_PATH', 'storage'),
-    'factory_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_FACTORY_OUTPUT_PATH', '/allu/factories'),
-    'seeder_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_SEEDER_OUTPUT_PATH', '/allu/seeders'),
-    'model_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_MODEL_OUTPUT_PATH', '/allu/Models'),
-    'repository_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_REPOSITORY_OUTPUT_PATH', '/allu/Repositories'),
-    'service_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_SERVICE_OUTPUT_PATH', '/allu/Services/Api'),
-    'controller_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_CONTROLLER_OUTPUT_PATH', '/allu/Controllers/Api/V1'),
-    'request_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_REQUEST_OUTPUT_PATH', '/allu/Requests/Api'),
-    'resource_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_RESOURCE_OUTPUT_PATH', '/allu/Resources/Api'),
-    'filter_output_path' => env('CPRO_OUTPUT_PATH', 'storage') . env('CPRO_FILTER_OUTPUT_PATH', '/allu/ModelFilters'),
+//    be output path
+    'be_factory_output_path' => $outputPath . env('CPRO_BE_FACTORY_OUTPUT_PATH', '/backend/database/factories'),
+    'be_seeder_output_path' => $outputPath . env('CPRO_BE_SEEDER_OUTPUT_PATH', '/backend/database/seeders'),
+    'be_model_output_path' => $outputPath . env('CPRO_BE_MODEL_OUTPUT_PATH', '/backend/app/Models'),
+    'be_repository_output_path' => $outputPath . env('CPRO_BE_REPOSITORY_OUTPUT_PATH', '/backend/app/Repositories'),
+    'be_service_output_path' => $outputPath . env('CPRO_BE_SERVICE_OUTPUT_PATH', '/backend/app/Services/Api'),
+    'be_controller_output_path' => $outputPath . env('CPRO_BE_CONTROLLER_OUTPUT_PATH', '/backend/app/Http/Controllers/Api/V1'),
+    'be_request_output_path' => $outputPath . env('CPRO_BE_REQUEST_OUTPUT_PATH', '/backend/app/Http/Requests/Api'),
+    'be_resource_output_path' => $outputPath . env('CPRO_BE_RESOURCE_OUTPUT_PATH', '/backend/app/Http/Resources/Api'),
+    'be_filter_output_path' => $outputPath . env('CPRO_BE_FILTER_OUTPUT_PATH', '/backend/app/ModelFilters'),
 
 //    table except
     'table_excepts' => env('CPRO_TABLE_EXCEPTS', 'migrations,failed_jobs,password_resets,personal_access_tokens'),
-    'stub_path' => env('CPRO_STUB_DIR', 'stubs/api-resource-generator/'),
+    'be_stub_path' => "{$stubPath}/be/",
 
     'factory_limit_default' => 10,
 
-    'resource_file_map' => [
+    'be_resource_file_map' => [
         'controller' => 'controller',
         'factory' => 'factory',
         'model' => 'model',

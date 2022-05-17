@@ -45,7 +45,7 @@ abstract class BaseGenerateApiResourcesService
 
     protected function exportResourceFile($formatter, $file, $type = '')
     {
-        $pathOutputConfig = config("cpro-resource-generator.{$file}_output_path");
+        $pathOutputConfig = config("cpro-resource-generator.be_{$file}_output_path");
 
         if (Str::contains($type, 'request')) {
             $pathOutputConfig .= '/' . $formatter->getExportDirName($type);

@@ -14,7 +14,7 @@ class GenerateApiResourcesService extends BaseGenerateApiResourcesService
         if (empty($this->tableDefinitions)) {
             return '<fg=red>Table list is empty</>';
         }
-        $resourceFileMap = config('cpro-resource-generator.resource_file_map');
+        $resourceFileMap = config('cpro-resource-generator.be_resource_file_map');
         foreach ($this->tableDefinitions as $tableDefinition) {
             $formatter = Formatter::init($tableDefinition);
             $this->command->info("Start export resource of table <fg=yellow>{$formatter->tableName}</>");

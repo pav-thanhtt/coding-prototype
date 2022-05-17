@@ -63,7 +63,7 @@ abstract class BaseFormatter
      */
     private function getStubPath(string $resourceType): bool|string
     {
-        if (File::exists($overridden = resource_path(config('cpro-resource-generator.stub_path') . $resourceType . '.stub'))) {
+        if (File::exists($overridden = resource_path(config('cpro-resource-generator.be_stub_path') . $resourceType . '.stub'))) {
             return $overridden;
         }
         return false;
