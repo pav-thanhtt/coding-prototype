@@ -1,0 +1,151 @@
+<?php
+
+namespace App\Utilities\Cpro\Formatters\RmsfFormatter;
+
+use App\Utilities\Cpro\Definitions\TableDefinition;
+use Illuminate\Support\Str;
+
+class ModelFormatter extends BaseRmsfFormatter
+{
+    private const STUB_FILE_NAME = 'model';
+    private const EXPORT_FILE_NAME_SUFFIX = '.php';
+
+    public function __construct(TableDefinition $tableDefinition)
+    {
+        parent::__construct($tableDefinition);
+        $this->fileName[self::STUB_FILE_NAME] = $this->tableName('ClassNameSingular') . self::EXPORT_FILE_NAME_SUFFIX;
+    }
+
+    protected function getStubFileName(): string
+    {
+        return self::STUB_FILE_NAME;
+    }
+
+
+    public function getExportFileName(?string $options = ''): string
+    {
+        return $this->fileName[self::STUB_FILE_NAME];
+    }
+
+    protected function renderClassSoftDeletes(): string
+    {
+        if ($this->hasSoftDeletes()) {
+            return "use Illuminate\Database\Eloquent\SoftDeletes;\n";
+        }
+        return '';
+    }
+
+    protected function renderUseSoftDeletes(): string
+    {
+        if ($this->hasSoftDeletes()) {
+            return ', SoftDeletes';
+        }
+        return '';
+    }
+
+    /**
+     * @param int $indentTab
+     * @param $file
+     * @return string
+     */
+    protected function renderFillable(int $indentTab, $file): string
+    {
+        $columns = $this->tableDefinition->getColumns();
+
+        $fillable = array_map(function ($column) {
+            if ($this->isFillable($column)) {
+                return $column->getColumnName();
+            }
+        }, $columns);
+
+        $fillable = $this->cleanArray($fillable);
+
+        if (empty($fillable)) {
+            return '';
+        }
+
+        $lines = $this->arrayRender($fillable, $indentTab + 1);
+
+        return sprintf(
+            '%s%s%s%s%s%s',
+            $this->indentSpace($indentTab),
+            "protected \$fillable = [\n",
+            $lines,
+            "\n",
+            $this->indentSpace($indentTab),
+            "];"
+        );
+    }
+
+    protected function renderHidden(int $indentTab): string
+    {
+        $columns = $this->tableDefinition->getColumns();
+
+        $hidden = array_map(function ($column) {
+            if ($this->isHidden($column)) {
+                return $column->getColumnName();
+            }
+        }, $columns);
+
+        $hidden = $this->cleanArray($hidden);
+
+        if (empty($hidden)) {
+            return '';
+        }
+
+        $lines = $this->arrayRender($hidden, $indentTab + 1);
+
+        return sprintf(
+            '%s%s%s%s%s%s',
+            $this->indentSpace($indentTab),
+            "protected \$hidden = [\n",
+            $lines,
+            "\n",
+            $this->indentSpace($indentTab),
+            "];"
+        );
+    }
+
+    protected function renderIncrementing(int $indentTab): string
+    {
+        $idColumn = $this->tableDefinition->getColumnByName('id');
+        if (!$idColumn->isAutoIncrementing())
+        {
+            return $this->indentSpace($indentTab) . 'public $incrementing = false;';
+        }
+
+        return '';
+    }
+
+    protected function renderKeyType(int $indentTab): string
+    {
+        $idColumn = $this->tableDefinition->getColumnByName('id');
+        $idDataType = $idColumn->getColumnDataType();
+        if (!Str::contains($idDataType, 'int') && Str::contains($idDataType, 'char'))
+        {
+            return $this->indentSpace($indentTab) . 'protected $keyType = \'string\';';
+        }
+
+        return '';
+    }
+
+    protected function renderProperty(int $indentTab, $file): string
+    {
+        $text = $this->renderIncrementing($indentTab, $file);
+        $text = sprintf('%s%s%s', $text, empty($text) ? $text : "\n\n", $this->renderKeyType($indentTab, $file));
+        $text = sprintf('%s%s%s', $text, empty($text) ? $text : "\n\n", $this->renderFillable($indentTab, $file));
+        $text = sprintf('%s%s%s', $text, empty($text) ? $text : "\n\n", $this->renderHidden($indentTab, $file));
+
+        return rtrim($text);
+    }
+
+    private function hasSoftDeletes(): bool
+    {
+        $deleteColumn = $this->tableDefinition->getColumnByName('deleted_at');
+        return (
+            !is_null($deleteColumn) &&
+            $deleteColumn->isNullable() &&
+            ($deleteColumn->getColumnDataType() === 'timestamp' || $deleteColumn->getColumnDataType() === 'datetime')
+        );
+    }
+}

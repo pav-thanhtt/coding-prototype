@@ -21,6 +21,8 @@ abstract class BaseFormatter
 
     abstract public function getExportFileName(?string $options = '');
 
+    abstract public function getStubPath(string $resourceType): bool|string;
+
     public function __construct(TableDefinition $tableDefinition)
     {
         $this->tableDefinition = $tableDefinition;
@@ -34,7 +36,7 @@ abstract class BaseFormatter
 
     protected function replace($stub, $file): string
     {
-        return preg_replace_callback('/{{(.+?)}}/', function ($matches) use ($file) {
+        return preg_replace_callback('/{{{(.+?)}}}/', function ($matches) use ($file) {
             $matches = $matches[1];
             if (preg_match('/\((\d*|\w*)\)/', trim($matches), $matchParam)) {
                 if (!empty($param = trim($matchParam[0], '() '))) {
@@ -56,19 +58,6 @@ abstract class BaseFormatter
         }
         return false;
     }
-
-    /**
-     * @param string $resourceType
-     * @return false|string
-     */
-    private function getStubPath(string $resourceType): bool|string
-    {
-        if (File::exists($overridden = resource_path(config('cpro-resource-generator.be_stub_path') . $resourceType . '.stub'))) {
-            return $overridden;
-        }
-        return false;
-    }
-
 
     /**
      * @param array $array
@@ -122,7 +111,7 @@ abstract class BaseFormatter
         $colName = $column->getColumnName();
 
         return !(
-            $colName === 'id' ||
+            ($colName === 'id' && Str::contains($dataType, 'int')) ||
             Str::contains($colName, 'token') ||
             $this->isCurrent($column) ||
             (
@@ -204,7 +193,7 @@ abstract class BaseFormatter
         return "'$str'";
     }
 
-    private function indentSpace($indentTab): string
+    protected function indentSpace($indentTab): string
     {
         return Str::padLeft('', $indentTab * self::INDENT_SPACE_FORMAT_DEFAULT, ' ');
     }

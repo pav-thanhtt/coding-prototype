@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Utilities\Cpro\Formatters;
+namespace App\Utilities\Cpro\Formatters\RmsfFormatter;
 
 use App\Utilities\Cpro\Definitions\ColumnDefinition;
 use App\Utilities\Cpro\Definitions\TableDefinition;
 
-class RepositoryFormatter extends BaseFormatter
+class RepositoryFormatter extends BaseRmsfFormatter
 {
     private const STUB_FILE_NAME = 'repository';
     private const EXPORT_FILE_NAME_SUFFIX = 'Repository.php';

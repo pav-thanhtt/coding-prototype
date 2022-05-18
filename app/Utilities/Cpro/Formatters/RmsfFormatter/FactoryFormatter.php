@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Utilities\Cpro\Formatters;
+namespace App\Utilities\Cpro\Formatters\RmsfFormatter;
 
 use App\Utilities\Cpro\Definitions\ColumnDefinition;
 use App\Utilities\Cpro\Definitions\TableDefinition;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class FactoryFormatter extends BaseFormatter
+class FactoryFormatter extends BaseRmsfFormatter
 {
     private const STUB_FILE_NAME = 'factory';
     private const EXPORT_FILE_NAME_SUFFIX = 'Factory.php';
@@ -47,7 +46,7 @@ class FactoryFormatter extends BaseFormatter
     {
         $columnName = $column->getColumnName();
         return !(
-            $columnName === 'id' ||
+            ($columnName === 'id' && Str::contains($column->getColumnDataType(), 'int')) ||
             $columnName === 'created_at' ||
             $columnName === 'updated_at' ||
             $columnName === 'deleted_at' ||

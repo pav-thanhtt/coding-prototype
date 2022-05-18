@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Seeder;
 
-class {{ tableName(ClassNameSingular) }}Seeder extends Seeder
+class {{{ tableName(ClassNameSingular) }}}Seeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -13,6 +13,6 @@ class {{ tableName(ClassNameSingular) }}Seeder extends Seeder
      */
     public function run(): void
     {
-        \App\Models\{{ tableName(ClassNameSingular) }}::factory({{ factoryLimit }})->create();
+        \App\Models\{{{ tableName(ClassNameSingular) }}}::factory({{{ factoryLimit }}})->create();
     }
 }

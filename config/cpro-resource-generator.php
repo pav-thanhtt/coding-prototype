@@ -23,15 +23,18 @@ return [
 
     'be_resource_file_map' => [
         'controller' => 'controller',
-        'factory' => 'factory',
-        'model' => 'model',
-        'repository' => 'repository',
         'resource' => 'resource',
-        'seeder' => 'seeder',
         'service' => 'service',
         'search_request' => 'request',
         'store_request' => 'request',
         'update_request' => 'request',
         'filter' => 'filter',
+    ],
+
+    'rmsf_resource_file_map' => [
+        'repository' => 'repository',
+        'model' => 'model',
+        'seeder' => 'seeder',
+        'factory' => 'factory',
     ]
 ];

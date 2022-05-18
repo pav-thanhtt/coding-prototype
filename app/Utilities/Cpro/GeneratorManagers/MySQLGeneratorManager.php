@@ -2,22 +2,31 @@
 
 namespace App\Utilities\Cpro\GeneratorManagers;
 
-use App\Console\Commands\GenerateApiResourcesCommand;
-use App\Utilities\Cpro\Formatters\Formatter;
 use App\Utilities\Cpro\Generators\MySQL\TableGenerator;
+use Illuminate\Console\Command;
 use Illuminate\Support\Facades\DB;
 
 class MySQLGeneratorManager extends BaseGeneratorManager
 {
+    private static $instance = null;
     /**
      *
      */
-    public function __construct(GenerateApiResourcesCommand $command)
+    private function __construct(Command $command, $tables)
     {
         $this->command = $command;
+        $this->handle($tables);
     }
 
-    public function init($tables)
+    public static function instance(Command $command, $tables)
+    {
+        if(isset(self::$instance)){
+            return self::$instance;
+        }
+        return self::$instance = new self($command, $tables);
+    }
+
+    protected function init($tables)
     {
         $allTables = DB::select('SHOW FULL TABLES');
         $allTables = array_map(function ($table) use ($tables) {

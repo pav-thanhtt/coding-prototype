@@ -4,19 +4,19 @@ declare(strict_types = 1);
 
 namespace App\Repositories;
 
-use App\Models\{{tableName(ClassNameSingular)}};
+use App\Models\{{{tableName(ClassNameSingular)}}};
 use Illuminate\Database\Eloquent\Builder;
 
-class {{tableName(ClassNameSingular)}}Repository
+class {{{tableName(ClassNameSingular)}}}Repository
 {
     /**
-     * @var {{tableName(ClassNameSingular)}}
+     * @var {{{tableName(ClassNameSingular)}}}
      */
-    private {{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}Model;
+    private {{{tableName(ClassNameSingular)}}} ${{{tableName(PropertyName)}}}Model;
 
-    public function __construct({{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}Model)
+    public function __construct({{{tableName(ClassNameSingular)}}} ${{{tableName(PropertyName)}}}Model)
     {
-        $this->{{tableName(PropertyName)}}Model = ${{tableName(PropertyName)}}Model;
+        $this->{{{tableName(PropertyName)}}}Model = ${{{tableName(PropertyName)}}}Model;
     }
 
     /**
@@ -27,12 +27,12 @@ class {{tableName(ClassNameSingular)}}Repository
      */
     private function __sort(Builder $builder, array $requestData): Builder
     {
-        $sortField = isset($requestData['sort_field']) && ! empty($requestData['sort_field']) ? $requestData['sort_field'] : 'updated_at';
+        $sortField = isset($requestData['sort']) && ! empty($requestData['sort']) ? $requestData['sort'] : 'updated_at';
 
         $direction = isset($requestData['sort_direction']) && ! empty($requestData['sort_direction']) ? $requestData['sort_direction'] : 'desc';
 
         $sortColumns = [
-{{renderSortFields(3)}}
+{{{renderSortFields(3)}}}
         ];
 
         if (in_array($sortField, $sortColumns, true)) {
@@ -44,12 +44,12 @@ class {{tableName(ClassNameSingular)}}Repository
 
     public function getAll()
     {
-        return $this->{{tableName(PropertyName)}}Model->all();
+        return $this->{{{tableName(PropertyName)}}}Model->all();
     }
 
     public function getFiltered(array $requestData, $returnFirstFlg = false)
     {
-        $builder = $this->{{tableName(PropertyName)}}Model->filter($requestData);
+        $builder = $this->{{{tableName(PropertyName)}}}Model->filter($requestData);
 
         if ($returnFirstFlg) {
             return $builder->first();
@@ -62,23 +62,23 @@ class {{tableName(ClassNameSingular)}}Repository
     {
         $perPage = $requestData['per_page'] ?? config('eloquentfilter.paginate_limit');
 
-        ${{tableName(ParamNamePlural)}} = $this->{{tableName(PropertyName)}}Model->filter($requestData);
+        ${{{tableName(ParamNamePlural)}}} = $this->{{{tableName(PropertyName)}}}Model->filter($requestData);
 
-        return $this->__sort(${{tableName(ParamNamePlural)}}, $requestData)->paginate($perPage);
+        return $this->__sort(${{{tableName(ParamNamePlural)}}}, $requestData)->paginate($perPage);
     }
 
     public function getByPK(int $id)
     {
-        return $this->{{tableName(PropertyName)}}Model->find($id);
+        return $this->{{{tableName(PropertyName)}}}Model->find($id);
     }
 
     public function updateOrCreate(array $attributes, array $values = [])
     {
-        return $this->{{tableName(PropertyName)}}Model->updateOrCreate($attributes, $values);
+        return $this->{{{tableName(PropertyName)}}}Model->updateOrCreate($attributes, $values);
     }
 
     public function destroy(int | array $ids)
     {
-        return $this->{{tableName(PropertyName)}}Model->destroy($ids);
+        return $this->{{{tableName(PropertyName)}}}Model->destroy($ids);
     }
 }
