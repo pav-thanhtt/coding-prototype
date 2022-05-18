@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Utilities\Cpro\Formatters;
+namespace App\Utilities\Cpro\Formatters\BeCrudFormatter;
 
 use App\Utilities\Cpro\Definitions\TableDefinition;
 
-class ServiceFormatter extends BaseFormatter
+class ServiceFormatter extends BaseBeFormatter
 {
     private const STUB_FILE_NAME = 'service';
     private const EXPORT_FILE_NAME_SUFFIX = 'Service.php';

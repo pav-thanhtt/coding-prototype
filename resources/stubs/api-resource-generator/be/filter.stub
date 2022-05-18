@@ -6,12 +6,12 @@ namespace App\ModelFilters;
 
 use EloquentFilter\ModelFilter;
 
-class {{tableName(ClassNameSingular)}}Filter extends ModelFilter
+class {{{tableName(ClassNameSingular)}}}Filter extends ModelFilter
 {
     public function keyword($value)
     {
         $searchFields = [
-{{renderSearchFields(3)}}
+{{{renderSearchFields(3)}}}
         ];
 
         return $this->where(function ($query) use ($searchFields, $value) {
@@ -20,5 +20,5 @@ class {{tableName(ClassNameSingular)}}Filter extends ModelFilter
             }
         });
     }
-{{renderMethodFilters(1)}}
+{{{renderMethodFilters(1)}}}
 }

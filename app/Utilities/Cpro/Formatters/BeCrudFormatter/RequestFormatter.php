@@ -1,13 +1,13 @@
 <?php
 
-namespace App\Utilities\Cpro\Formatters;
+namespace App\Utilities\Cpro\Formatters\BeCrudFormatter;
 
 use App\Utilities\Cpro\Definitions\ColumnDefinition;
 use App\Utilities\Cpro\Definitions\TableDefinition;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class RequestFormatter extends BaseFormatter
+class RequestFormatter extends BaseBeFormatter
 {
     private const STUB_FILE_NAME = 'request';
     private const EXPORT_SEARCH_FILE_NAME = 'SearchRequest.php';
@@ -49,7 +49,7 @@ class RequestFormatter extends BaseFormatter
                 'per_page' => 'int|min:1',
                 'keyword' => 'string',
                 'include' => '_@Rule::in([\'meta\'])',
-                'sort_field' => 'string',
+                'sort' => 'string',
                 'sort_direction' => '_@Rule::in([\'desc\', \'asc\'])',
             ];
 
@@ -97,7 +97,7 @@ class RequestFormatter extends BaseFormatter
         $columnName = $column->getColumnName();
         $columnType = $column->getColumnDataType();
         return !(
-            $columnName === 'id' ||
+            ($columnName === 'id' && Str::contains($column->getColumnDataType(), 'int')) ||
             $column->isAutoIncrementing() ||
             $this->isCurrent($column) ||
             Str::contains($columnName, 'token') ||

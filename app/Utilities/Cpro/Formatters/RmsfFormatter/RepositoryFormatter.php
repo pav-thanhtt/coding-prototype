@@ -4,8 +4,9 @@ namespace App\Utilities\Cpro\Formatters\RmsfFormatter;
 
 use App\Utilities\Cpro\Definitions\ColumnDefinition;
 use App\Utilities\Cpro\Definitions\TableDefinition;
+use App\Utilities\Cpro\Formatters\BeCrudFormatter\BaseBeFormatter;
 
-class RepositoryFormatter extends BaseRmsfFormatter
+class RepositoryFormatter extends BaseBeFormatter
 {
     private const STUB_FILE_NAME = 'repository';
     private const EXPORT_FILE_NAME_SUFFIX = 'Repository.php';

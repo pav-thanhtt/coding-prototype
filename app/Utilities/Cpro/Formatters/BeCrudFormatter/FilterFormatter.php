@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Utilities\Cpro\Formatters;
+namespace App\Utilities\Cpro\Formatters\BeCrudFormatter;
 
 use App\Utilities\Cpro\Definitions\ColumnDefinition;
 use App\Utilities\Cpro\Definitions\TableDefinition;
 use Illuminate\Support\Str;
 
-class FilterFormatter extends BaseFormatter
+class FilterFormatter extends BaseBeFormatter
 {
     private const STUB_FILE_NAME = 'filter';
     private const EXPORT_FILE_NAME_SUFFIX = 'Filter.php';

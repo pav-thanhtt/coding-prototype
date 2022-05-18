@@ -3,9 +3,10 @@
 namespace App\Utilities\Cpro\Formatters\RmsfFormatter;
 
 use App\Utilities\Cpro\Definitions\TableDefinition;
+use App\Utilities\Cpro\Formatters\BeCrudFormatter\BaseBeFormatter;
 use Illuminate\Support\Str;
 
-class ModelFormatter extends BaseRmsfFormatter
+class ModelFormatter extends BaseBeFormatter
 {
     private const STUB_FILE_NAME = 'model';
     private const EXPORT_FILE_NAME_SUFFIX = '.php';

@@ -4,22 +4,22 @@ declare(strict_types = 1);
 
 namespace App\Services\Api;
 
-use App\Models\{{tableName(ClassNameSingular)}};
-use App\Repositories\{{tableName(ClassNameSingular)}}Repository;
+use App\Models\{{{tableName(ClassNameSingular)}}};
+use App\Repositories\{{{tableName(ClassNameSingular)}}}Repository;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
-class {{tableName(ClassNameSingular)}}Service
+class {{{tableName(ClassNameSingular)}}}Service
 {
     /**
-     * @var {{tableName(ClassNameSingular)}}Repository
+     * @var {{{tableName(ClassNameSingular)}}}Repository
      */
-    private {{tableName(ClassNameSingular)}}Repository ${{tableName(PropertyName)}}Repo;
+    private {{{tableName(ClassNameSingular)}}}Repository ${{{tableName(PropertyName)}}}Repo;
 
-    public function __construct({{tableName(ClassNameSingular)}}Repository ${{tableName(PropertyName)}}Repo)
+    public function __construct({{{tableName(ClassNameSingular)}}}Repository ${{{tableName(PropertyName)}}}Repo)
     {
-        $this->{{tableName(PropertyName)}}Repo = ${{tableName(PropertyName)}}Repo;
+        $this->{{{tableName(PropertyName)}}}Repo = ${{{tableName(PropertyName)}}}Repo;
     }
 
     /**
@@ -29,7 +29,7 @@ class {{tableName(ClassNameSingular)}}Service
      */
     public function getList(array $requestData): LengthAwarePaginator
     {
-        return $this->{{tableName(PropertyName)}}Repo->getFilteredPaginator($requestData);
+        return $this->{{{tableName(PropertyName)}}}Repo->getFilteredPaginator($requestData);
     }
 
     /**
@@ -39,27 +39,27 @@ class {{tableName(ClassNameSingular)}}Service
      */
     public function create(array $requestData): Builder|Model
     {
-        return $this->{{tableName(PropertyName)}}Repo->updateOrCreate(['id' => null], $requestData);
+        return $this->{{{tableName(PropertyName)}}}Repo->updateOrCreate(['id' => null], $requestData);
     }
 
     /**
-     * @param {{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}
+     * @param {{{tableName(ClassNameSingular)}}} ${{{tableName(PropertyName)}}}
      * @param array $requestData
      *
      * @return Builder|Model
      */
-    public function update({{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}, array $requestData): Builder|Model
+    public function update({{{tableName(ClassNameSingular)}}} ${{{tableName(PropertyName)}}}, array $requestData): Builder|Model
     {
-        return $this->{{tableName(PropertyName)}}Repo->updateOrCreate(['id' => ${{tableName(PropertyName)}}->id], $requestData);
+        return $this->{{{tableName(PropertyName)}}}Repo->updateOrCreate(['id' => ${{{tableName(PropertyName)}}}->id], $requestData);
     }
 
     /**
-     * @param {{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}
+     * @param {{{tableName(ClassNameSingular)}}} ${{{tableName(PropertyName)}}}
      *
      * @return mixed
      */
-    public function delete({{tableName(ClassNameSingular)}} ${{tableName(PropertyName)}}): mixed
+    public function delete({{{tableName(ClassNameSingular)}}} ${{{tableName(PropertyName)}}}): mixed
     {
-        return $this->{{tableName(PropertyName)}}Repo->destroy(${{tableName(PropertyName)}}->id);
+        return $this->{{{tableName(PropertyName)}}}Repo->destroy(${{{tableName(PropertyName)}}}->id);
     }
 }

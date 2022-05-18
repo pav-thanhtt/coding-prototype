@@ -3,8 +3,9 @@
 namespace App\Utilities\Cpro\Formatters\RmsfFormatter;
 
 use App\Utilities\Cpro\Definitions\TableDefinition;
+use App\Utilities\Cpro\Formatters\BeCrudFormatter\BaseBeFormatter;
 
-class SeederFormatter extends BaseRmsfFormatter
+class SeederFormatter extends BaseBeFormatter
 {
     private const STUB_FILE_NAME = 'seeder';
     private const EXPORT_FILE_NAME_SUFFIX = 'Seeder.php';

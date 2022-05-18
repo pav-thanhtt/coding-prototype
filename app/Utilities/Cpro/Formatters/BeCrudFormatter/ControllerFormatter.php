@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Utilities\Cpro\Formatters;
+namespace App\Utilities\Cpro\Formatters\BeCrudFormatter;
 
 use App\Utilities\Cpro\Definitions\TableDefinition;
 
-class ControllerFormatter extends BaseFormatter
+class ControllerFormatter extends BaseBeFormatter
 {
     private const STUB_FILE_NAME = 'controller';
     private const EXPORT_FILE_NAME_SUFFIX = 'Controller.php';

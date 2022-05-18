@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Utilities\Cpro\Formatters\RmsfFormatter;
+namespace App\Utilities\Cpro\Formatters\BeCrudFormatter;
 
 use App\Utilities\Cpro\Definitions\TableDefinition;
 use App\Utilities\Cpro\Formatters\BaseFormatter;
 use Illuminate\Support\Facades\File;
 
-abstract class BaseRmsfFormatter extends BaseFormatter
+abstract class BaseBeFormatter extends BaseFormatter
 {
     public function __construct(TableDefinition $tableDefinition)
     {

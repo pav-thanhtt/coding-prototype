@@ -4,9 +4,10 @@ namespace App\Utilities\Cpro\Formatters\RmsfFormatter;
 
 use App\Utilities\Cpro\Definitions\ColumnDefinition;
 use App\Utilities\Cpro\Definitions\TableDefinition;
+use App\Utilities\Cpro\Formatters\BeCrudFormatter\BaseBeFormatter;
 use Illuminate\Support\Str;
 
-class FactoryFormatter extends BaseRmsfFormatter
+class FactoryFormatter extends BaseBeFormatter
 {
     private const STUB_FILE_NAME = 'factory';
     private const EXPORT_FILE_NAME_SUFFIX = 'Factory.php';

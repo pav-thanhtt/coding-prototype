@@ -3,7 +3,6 @@
 namespace App\Services\Cpro\Generator;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
 use Illuminate\Support\Str;
 
 abstract class BaseGenerateBeResourcesService extends BaseGenerateResourcesService

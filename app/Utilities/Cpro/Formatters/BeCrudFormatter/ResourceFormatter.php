@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Utilities\Cpro\Formatters;
+namespace App\Utilities\Cpro\Formatters\BeCrudFormatter;
 
 use App\Utilities\Cpro\Definitions\ColumnDefinition;
 use App\Utilities\Cpro\Definitions\TableDefinition;
 
-class ResourceFormatter extends BaseFormatter
+class ResourceFormatter extends BaseBeFormatter
 {
     private const STUB_FILE_NAME = 'resource';
     private const EXPORT_FILE_NAME_SUFFIX = 'Resource.php';
