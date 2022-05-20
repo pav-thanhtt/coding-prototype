@@ -1,0 +1,198 @@
+<template>
+  <a-layout class="table">
+    <a-layout class="table-filter">
+      <a-row class="form-title" align="middle">
+        <a-col :span="20" class="table-title">
+          <span>{{{tableName(ClassNameSingular)}}} List</span>
+        </a-col>
+        <a-col :span="4">
+          <a-row type="flex" align="middle" justify="end">
+            <a-col>
+              <Button type="primary" @clickHandler="onClickCreateButton">Create</Button>
+            </a-col>
+          </a-row>
+        </a-col>
+      </a-row>
+      <a-form
+        layout="vertical"
+        class="form-filter"
+        :model="searchParam"
+        @finish="onSubmitSearch"
+      >
+        <a-row flex :gutter="26">
+          <a-col :span="5">
+            <a-form-item label="Search" name="keyword">
+              <a-input v-model:value="searchParam.keyword" placeholder="Enter search keyword"/>
+            </a-form-item>
+          </a-col>
+          <a-col :span="5">
+            <a-form-item label="Limit" name="per_page">
+              <a-select default-value="5" style="width: 200px" v-model:value="searchParam.per_page">
+                <a-select-option value="5">
+                  5
+                </a-select-option>
+                <a-select-option value="10">
+                  10
+                </a-select-option>
+              </a-select>
+            </a-form-item>
+          </a-col>
+        </a-row>
+{{{renderFilterFormGroups(4)}}}
+        <a-row flex :gutter="16" style="margin-top: 20px">
+          <a-col :span="2">
+            <a-form-item>
+              <a-button
+                type="primary"
+                html-type="submit"
+                btnClass="btn-without-top-lbl saas-btn-primary"
+                :block="true"
+              >
+                Submit
+              </a-button>
+            </a-form-item>
+          </a-col>
+          <a-col :span="2" :offset="1">
+            <a-form-item>
+              <a-button @click="onClearFilter">
+                Clear Filter
+              </a-button>
+            </a-form-item>
+          </a-col>
+        </a-row>
+      </a-form>
+    </a-layout>
+    <a-layout>
+      <div v-if="{{{tableName(ParamNamePlural)}}}.data.length > 0">
+        <DataRowCounter
+          :total="{{{tableName(ParamNamePlural)}}}.meta.total_count"
+          :perPage="
+            {{{tableName(ParamNamePlural)}}}.meta.per_page > {{{tableName(ParamNamePlural)}}}.meta.total_count ?
+            {{{tableName(ParamNamePlural)}}}.meta.total_count :
+            {{{tableName(ParamNamePlural)}}}.meta.per_page
+          "
+        />
+      </div>
+    </a-layout>
+    <a-layout class="table">
+      <DataTable
+        :columns="columns"
+        :dataSource="{{{tableName(ParamNamePlural)}}}"
+        @onPageChange="onPageChange"
+{{{renderCallOnTableChange}}}
+      >
+{{{renderCellSlot(4)}}}
+        <template #action="{ record }">
+          <CellAction :id="record.id" @editHandler="onEdit" @deleteHandler="onDelete" />
+        </template>
+      </DataTable>
+    </a-layout>
+  </a-layout>
+</template>
+
+<script lang="ts">
+import { defineComponent, watch, reactive, computed{{{renderImportRefText}}} } from 'vue'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'{{{renderImportMomentText}}}{{{renderInterfaceAntd}}}
+import DataTable from '@/components/commons/DataTable.vue'
+import CellAction from '@/components/commons/CellAction.vue'
+import DataRowCounter from '@/components/commons/DataRowCounter.vue'
+import Button from '@/components/commons/Button.vue'
+import {
+  PER_PAGE_DEFAULT,{{{renderDateFormatConstantText(1)}}}{{{renderDateTimeFormatConstantText(1)}}}{{{renderCharacterMaxLengthText(1)}}}
+  ROUTE_URLS
+} from '@/config/constants'{{{renderImportNormalizeHelperText}}}{{{renderImportSorterText}}}
+
+export default defineComponent({
+  name: 'Allu{{{tableName(ClassNameSingular)}}}',
+  components: {
+    DataTable,
+    CellAction,
+    DataRowCounter,
+    Button
+  },
+  setup () {
+    const store = useStore()
+    const router = useRouter()
+    const route = useRoute()
+{{{renderFilterDatetimeVariableComputed(2)}}}{{{renderSorterInfoConstant(2)}}}
+    const queryString = () => {
+      return {
+        per_page: route.query.per_page || PER_PAGE_DEFAULT,
+        page: route.query.page || 1,
+        ...route.query.keyword && { keyword: route.query.keyword }{{{renderFilterFieldQueryString(4)}}}{{{renderSorterQueryString(4)}}}
+      }
+    }
+
+    const searchParam = reactive({
+      ...queryString(){{{renderSearchParamReactive(3)}}}
+    })
+
+    const {{{tableName(ParamNamePlural)}}} = computed(() => store.state.{{{tableName(BindingName)}}}.{{{tableName(ParamNamePlural)}}})
+
+    const columns = computed(() => {
+{{{renderSorterConstant(3)}}}return [{{{renderColumnVariable(4)}}}
+        {
+          title: 'Action',
+          key: 'operation',
+          fixed: 'right',
+          slots: { customRender: 'action' }
+        }
+      ]
+    }){{{renderNormalizeDatesFunction(2)}}}
+    watch(
+      () => route.query,
+      async () => {
+        await store.dispatch('{{{tableName(BindingName)}}}/getList', {
+          include: 'meta',
+          ...queryString(){{{renderNormalizeDatesWatch(5)}}}
+        })
+      },
+      {
+        immediate: true
+      }
+    )
+
+    const onSubmitSearch = () => {
+{{{renderResetSorter(3)}}}const query = {
+        ...searchParam{{{renderCallNormalizeDatesFunction(4)}}}
+        page: 1
+      }
+      router.push({ query })
+    }
+
+    const onClearFilter = () => {
+      searchParam.keyword = undefined
+      searchParam.per_page = PER_PAGE_DEFAULT
+      searchParam.page = 1{{{renderFilterDateField(3)}}}
+{{{renderResetSorter(3)}}}router.push({ query: { ...searchParam{{{renderCallNormalizeDatesFunction(inline)}}} } })
+    }
+
+    const onPageChange = (page: number) => {
+      router.push({ query: { ...route.query, page } })
+    }{{{renderOnTableChangeFunction(2)}}}
+    const onClickCreateButton = () => {
+      router.push(ROUTE_URLS.{{{tableName(PascalSingular)}}}_CREATE)
+    }
+
+    const onEdit = (id: number) => {
+      router.push(`/{{{tableName(BindingName)}}}/${id}/edit`)
+    }
+    const onDelete = async (id: number) => {
+      await store.dispatch('{{{tableName(BindingName)}}}/delete', id)
+    }
+
+    return {
+      searchParam,{{{renderDateFormatConstantText(3)}}}{{{renderDateTimeFormatConstantText(3)}}}{{{renderCharacterMaxLengthText(3)}}}
+      {{{tableName(ParamNamePlural)}}},
+      columns,{{{renderMomentReturnText(3)}}}
+      onSubmitSearch,
+      onClearFilter,
+      onPageChange,{{{renderOnTableChangeReturnText(3)}}}
+      onClickCreateButton,
+      onEdit,
+      onDelete
+    }
+  }
+})
+</script>

@@ -41,9 +41,4 @@ class RepositoryFormatter extends BaseBeFormatter
     {
         return $this->arrayRender($this->sortFields, $indentTab);
     }
-
-    private function isSortField(ColumnDefinition $column): bool
-    {
-        return !$this->isHidden($column) && 'deleted_at' !== $column->getColumnName();
-    }
 }

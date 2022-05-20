@@ -1,0 +1,6 @@
+type Include = 'meta'
+type SortDirection = 'desc' | 'asc'
+
+export default interface {{{tableName(ClassNameSingular)}}}FilterBody {
+{{{renderTypeFilterBody(1)}}}
+}

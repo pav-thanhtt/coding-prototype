@@ -1,0 +1,7 @@
+<a-row flex>
+<a-col :span="5">
+  <a-form-item label="{!columnLabel!}" name="{!columnName!}">
+{{{renderFilterFormControl(2)}}}
+  </a-form-item>
+</a-col>
+</a-row>

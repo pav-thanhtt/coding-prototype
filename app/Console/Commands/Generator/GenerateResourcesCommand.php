@@ -2,12 +2,9 @@
 
 namespace App\Console\Commands\Generator;
 
-use App\Services\Cpro\GenerateApiResourcesService;
 use App\Traits\CommandTrait;
 use Exception;
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\Config;
-use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Artisan;
 
 class GenerateResourcesCommand extends Command
@@ -28,6 +25,16 @@ class GenerateResourcesCommand extends Command
     protected $description = 'Generate RESTFUL API resource command';
 
     /**
+     * Create a new command instance.
+     *
+     * @return void
+     */
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
+    /**
      * Execute the console command.
      *
      * @return void
@@ -41,6 +48,9 @@ class GenerateResourcesCommand extends Command
                 'con' => $connection, '--table' => $this->option('table')
             ]);
             Artisan::call('allu-cpro:be-crud-resource', [
+                'con' => $connection, '--table' => $this->option('table')
+            ]);
+            Artisan::call('allu-cpro:fe-crud-resource', [
                 'con' => $connection, '--table' => $this->option('table')
             ]);
 

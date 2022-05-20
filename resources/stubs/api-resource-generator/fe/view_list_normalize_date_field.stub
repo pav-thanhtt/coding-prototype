@@ -1,0 +1,2 @@
+{!columnName!}_from: normalizeFormDate(searchParam.{!columnName!}_from),
+{!columnName!}_to: normalizeFormDate(searchParam.{!columnName!}_to),

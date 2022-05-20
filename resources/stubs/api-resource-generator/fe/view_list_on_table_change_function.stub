@@ -1,0 +1,22 @@
+const onTableChange = (
+  pag: TableState['pagination'],
+  filters: TableStateFilters,
+  sorter: Sorter
+) => {
+  sortedInfo.value = sorter
+  searchParam.sort = sorter.field
+  if (sorter.order === 'descend') {
+    searchParam.sort_direction = 'desc'
+  } else if (sorter.order === 'ascend') {
+    searchParam.sort_direction = 'asc'
+  } else {
+    searchParam.sort = undefined
+    searchParam.sort_direction = undefined
+  }
+  const query = {
+    ...searchParam,
+    ...normalizeDates(),
+    page: 1
+  }
+  router.push({ query })
+}

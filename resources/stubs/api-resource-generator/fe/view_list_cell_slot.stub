@@ -1,0 +1,3 @@
+<template #{!columnName!}="{ record }">
+{{{renderCellSlotContent(1)}}}
+</template>

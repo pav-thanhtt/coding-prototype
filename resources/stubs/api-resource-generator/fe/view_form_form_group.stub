@@ -1,0 +1,8 @@
+<a-row>
+  <a-col :span="8">
+    <label class="allu-label">{!columnLabel!}{!requiredTxt!}</label>
+    <a-form-item :style="{ textAlign: 'left' }" name="{!columnName!}">
+{{{renderFormControl(3)}}}
+    </a-form-item>
+  </a-col>
+</a-row>

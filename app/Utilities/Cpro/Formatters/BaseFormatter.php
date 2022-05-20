@@ -9,8 +9,6 @@ use Illuminate\Support\Str;
 
 abstract class BaseFormatter
 {
-    private const INDENT_SPACE_FORMAT_DEFAULT = 4;
-
     protected string $stubFileName;
 
     protected array $fileName;
@@ -137,6 +135,11 @@ abstract class BaseFormatter
             ($dataType === 'timestamp' || $dataType === 'datetime');
     }
 
+    protected function isSortField(ColumnDefinition $column): bool
+    {
+        return !$this->isHidden($column) && 'deleted_at' !== $column->getColumnName();
+    }
+
     protected function isTextType(ColumnDefinition $column): bool
     {
         return Str::contains($column->getColumnDataType(), ['char', 'text', 'enum']);
@@ -155,6 +158,15 @@ abstract class BaseFormatter
     protected function isCurrent(ColumnDefinition $column): bool
     {
         return Str::contains($column->getColumnDataType(), ['datetime', 'timestamp']) && $column->getDefaultValue() === 'CURRENT_TIMESTAMP';
+    }
+
+    protected function isSoftDeletes(ColumnDefinition $column): bool
+    {
+        return (
+            $column->getColumnName() === 'deleted_at' &&
+            $column->isNullable() &&
+            ($column->getColumnDataType() === 'timestamp' || $column->getColumnDataType() === 'datetime')
+        );
     }
 
     protected function tableName($type, $file = ''): string
@@ -176,6 +188,9 @@ abstract class BaseFormatter
             case 'ClassNameSingularRequest':
                 $tableName = Str::ucfirst(Str::camel(Str::singular($tableName)));
                 break;
+            case 'PascalSingular':
+                $tableName = Str::upper((Str::singular($tableName)));
+                break;
             default:
                 $suffix = match ($file) {
                     'search_request' => 'Search',
@@ -195,7 +210,7 @@ abstract class BaseFormatter
 
     protected function indentSpace($indentTab): string
     {
-        return Str::padLeft('', $indentTab * self::INDENT_SPACE_FORMAT_DEFAULT, ' ');
+        return Str::padLeft('', $indentTab * $this->indentSpaceDefault, ' ');
     }
 
     protected function cleanArray($array, $isSortKey = true): array
@@ -207,7 +222,7 @@ abstract class BaseFormatter
         return array_values($arrClean);
     }
 
-    private function renderArrayValue($value, $indentTab = 0): float|int|string
+    protected function renderArrayValue($value, $indentTab = 0): float|int|string
     {
         if (is_array($value)) {
             return "[\n{$this->arrayRender($value, $indentTab + 1)}\n{$this->indentSpace($indentTab)}]";

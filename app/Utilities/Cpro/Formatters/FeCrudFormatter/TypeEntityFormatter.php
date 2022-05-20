@@ -1,14 +1,15 @@
 <?php
 
-namespace App\Utilities\Cpro\Formatters\BeCrudFormatter;
+namespace App\Utilities\Cpro\Formatters\FeCrudFormatter;
 
 use App\Utilities\Cpro\Definitions\ColumnDefinition;
 use App\Utilities\Cpro\Definitions\TableDefinition;
 
-class ResourceFormatter extends BaseBeFormatter
+class TypeEntityFormatter extends BaseFeFormatter
 {
-    private const STUB_FILE_NAME = 'resource';
-    private const EXPORT_FILE_NAME_SUFFIX = 'Resource.php';
+
+    private const STUB_FILE_NAME = 'type_entity';
+    private const EXPORT_FILE_NAME_SUFFIX = '.ts';
 
     public function __construct(TableDefinition $tableDefinition)
     {
@@ -27,17 +28,18 @@ class ResourceFormatter extends BaseBeFormatter
         return $this->fileName[self::STUB_FILE_NAME];
     }
 
-    public function renderResources(int $indentTab, $file): string
+    public function renderTypeEntity(int $indentTab, $file): string
     {
-        $resources = [];
+        $lines = [];
         $columns = $this->tableDefinition->getColumns();
         array_walk($columns,
-            function ($column) use (&$resources) {
+            function ($column) use (&$lines) {
                 if (!$this->isHidden($column) && !$this->isSoftDeletes($column)) {
-                    $resources[$column->getColumnName()] = '_@$this->' . $column->getColumnName();
+                    $lines[$column->getColumnName()] = $this->typeValue($column);
                 }
-            });
+            }
+        );
 
-        return $this->arrayRender($resources, $indentTab, true);
+        return $this->objectRender($lines, $indentTab);
     }
 }

@@ -1,0 +1,7 @@
+import {{{tableName(ClassNameSingular)}}} from '@/types/entities/{{{tableName(ClassNameSingular)}}}'
+import { Pagination } from '@/types/responses/Response'
+
+export interface {{{tableName(ClassNameSingular)}}}StoreType {
+  {{{tableName(ParamNamePlural)}}}: Pagination<{{{tableName(ClassNameSingular)}}}>,
+  {{{tableName(BindingName)}}}Detail: {{{tableName(ClassNameSingular)}}},
+}
