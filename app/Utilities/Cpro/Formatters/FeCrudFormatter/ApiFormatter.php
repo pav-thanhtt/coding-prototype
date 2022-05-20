@@ -7,7 +7,7 @@ use App\Utilities\Cpro\Definitions\TableDefinition;
 class ApiFormatter extends BaseFeFormatter
 {
     private const STUB_FILE_NAME = 'api';
-    private const EXPORT_FILE_NAME_SUFFIX = '.ts';
+    private const EXPORT_FILE_NAME_SUFFIX = 'Api.ts';
 
     public function __construct(TableDefinition $tableDefinition)
     {

@@ -1,1 +1,1 @@
-<a-input v-model:value="searchParam.{!columnName!}" placeholder="Enter search {!columnLabel!}"/>
+<a-input v-model:value="searchParam.{!columnName!}" placeholder="Enter {!columnLabel!}"/>

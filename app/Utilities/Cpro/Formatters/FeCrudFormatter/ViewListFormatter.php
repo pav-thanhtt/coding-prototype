@@ -38,7 +38,7 @@ class ViewListFormatter extends BaseFeFormatter
 
     public function getExportDirName(): string
     {
-        return $this->tableName('ClassNameSingular');
+        return $this->tableName('BindingName');
     }
 
     public function getExportFileName(?string $options = ''): string
@@ -164,6 +164,21 @@ class ViewListFormatter extends BaseFeFormatter
         return sprintf("\n%sonTableChange,", $this->indentSpace($indentTab));
     }
 
+    public function renderResetFilterField(int $indentTab, $file)
+    {
+        $filterFields = [];
+        $columns = $this->tableDefinition->getColumns();
+        array_walk($columns,
+            function ($column) use (&$filterFields, $file) {
+                if ($this->isMethodFilter($column) && !$this->isFilterDatetimeField($column)) {
+                    $this->columnName = $column->getColumnName();
+                    $filterFields[] = $this->replaceVariable("searchParam.{!columnName!} = undefined");
+                }
+            }
+        );
+        return empty($filterFields) ? '' : "\n" . $this->renderHtml($indentTab, $filterFields, '');
+    }
+
     public function renderFilterFormGroups(int $indentTab, $file)
     {
         $filterFormGroups = [];
@@ -175,7 +190,7 @@ class ViewListFormatter extends BaseFeFormatter
                 }
             }
         );
-        return "\n{$this->renderHtml($indentTab, $filterFormGroups)}";
+        return empty($filterFormGroups) ? '' : "\n{$this->renderHtml($indentTab, $filterFormGroups)}";
     }
 
     public function renderInterfaceAntd($file)
@@ -245,7 +260,7 @@ class ViewListFormatter extends BaseFeFormatter
                 }
             }
         );
-        return ",\n" . rtrim($this->renderHtml($indentTab, $filterFieldQueryString), ',');
+        return empty($filterFieldQueryString) ? '' : ",\n" . rtrim($this->renderHtml($indentTab, $filterFieldQueryString), ',');
     }
 
     public function renderFilterDateField(int $indentTab, $file)
@@ -260,7 +275,7 @@ class ViewListFormatter extends BaseFeFormatter
                 }
             }
         );
-        return "\n" . $this->renderHtml($indentTab, $filterDateField);
+        return empty($filterDateField) ? '' : "\n" . $this->renderHtml($indentTab, $filterDateField);
     }
 
     public function renderSorterQueryString(int $indentTab, $file)
@@ -283,7 +298,7 @@ class ViewListFormatter extends BaseFeFormatter
                 }
             }
         );
-        return ",\n" . rtrim($this->renderHtml($indentTab, $normalizeDatesWatch), ',');
+        return empty($normalizeDatesWatch) ? '' : ",\n" . rtrim($this->renderHtml($indentTab, $normalizeDatesWatch), ',');
     }
 
     public function renderFilterDatetimeVariableComputed(int $indentTab, $file)
@@ -297,7 +312,7 @@ class ViewListFormatter extends BaseFeFormatter
                 }
             }
         );
-        return "\n{$this->renderHtml($indentTab, $variableFilterDatetimeComputed)}";
+        return empty($variableFilterDatetimeComputed) ? '' : "\n{$this->renderHtml($indentTab, $variableFilterDatetimeComputed)}";
     }
 
     public function renderColumnVariable(int $indentTab, $file)
@@ -311,7 +326,7 @@ class ViewListFormatter extends BaseFeFormatter
                 }
             }
         );
-        return "\n" . $this->renderHtml($indentTab, $columnVariables);
+        return empty($columnVariables) ? '' : "\n" . $this->renderHtml($indentTab, $columnVariables);
     }
 
     public function renderNormalizeDatesFunction(int $indentTab, $file)

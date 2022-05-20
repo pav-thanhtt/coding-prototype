@@ -36,7 +36,7 @@ class ViewFormFormatter extends BaseFeFormatter
 
     public function getExportDirName(): string
     {
-        return $this->tableName('ClassNameSingular');
+        return $this->tableName('BindingName');
     }
 
     public function renderFormControls(int $indentTab, $file): string
@@ -81,7 +81,7 @@ class ViewFormFormatter extends BaseFeFormatter
             }
         );
 
-        return $this->renderHtml($indentTab, $lines);
+        return rtrim($this->renderHtml($indentTab, $lines), ',');
     }
 
     private function getRuleContent(ColumnDefinition $column) {

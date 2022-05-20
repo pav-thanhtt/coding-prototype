@@ -25,7 +25,7 @@ export default class {{{tableName(ClassNameSingular)}}}Api {
    * @returns
    */
 
-  public static async show (id: number): Promise<ResponseDetail<{{{tableName(ClassNameSingular)}}}>> {
+  public static async show (id: {{{idType}}}): Promise<ResponseDetail<{{{tableName(ClassNameSingular)}}}>> {
     return await api.get(`/{{{tableName(ParamNamePlural)}}}/${id}`)
   }
 
@@ -44,7 +44,7 @@ export default class {{{tableName(ClassNameSingular)}}}Api {
    * @return Promise|Error
    */
   public static async update (
-    id: number,
+    id: {{{idType}}},
     data: {{{tableName(ClassNameSingular)}}}Body
   ): Promise<ResponseMessage> {
     return await api.put(`/{{{tableName(ParamNamePlural)}}}/${id}`, data)
@@ -55,7 +55,7 @@ export default class {{{tableName(ClassNameSingular)}}}Api {
    * @param id
    * @returns
    */
-  public static async delete (id: number): Promise<ResponseMessage> {
+  public static async delete (id: {{{idType}}}): Promise<ResponseMessage> {
     return await api.delete(`/{{{tableName(ParamNamePlural)}}}/${id}`)
   }
 }

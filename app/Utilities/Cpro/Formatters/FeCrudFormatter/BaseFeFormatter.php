@@ -79,9 +79,9 @@ abstract class BaseFeFormatter extends BaseFormatter
         };
     }
 
-    protected function renderHtml(int $indentTab, array $groups)
+    protected function renderHtml(int $indentTab, array $groups, string $twoLine = "\n")
     {
-        return implode("\n\n", array_map(function($group) use($indentTab) {
+        return implode("$twoLine\n", array_map(function($group) use($indentTab) {
             $lines = explode("\n", $group);
             return implode("\n", array_map(function($line) use($indentTab) {
                 return sprintf('%s%s', $this->indentSpace($indentTab), $line);
@@ -107,5 +107,22 @@ abstract class BaseFeFormatter extends BaseFormatter
         return $this->isMethodFilter($column) &&
             Str::contains($columnName, '_at') &&
             ($dataType === 'timestamp' || $dataType === 'datetime');
+    }
+
+    protected function idType($file)
+    {
+      $idColumn = $this->tableDefinition->getColumnByName('id');
+      if (is_null($idColumn)) {
+        return 'any';
+      }
+
+      if($idColumn->isAutoIncrementing() || Str::contains($idColumn->getColumnDataType(), 'int')) {
+        return 'number';
+      }
+
+      if(Str::contains($idColumn->getColumnDataType(), 'char')) {
+        return 'string';
+      }
+      return 'any';
     }
 }

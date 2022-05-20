@@ -45,7 +45,6 @@
               <a-button
                 type="primary"
                 html-type="submit"
-                btnClass="btn-without-top-lbl saas-btn-primary"
                 :block="true"
               >
                 Submit
@@ -164,7 +163,7 @@ export default defineComponent({
     const onClearFilter = () => {
       searchParam.keyword = undefined
       searchParam.per_page = PER_PAGE_DEFAULT
-      searchParam.page = 1{{{renderFilterDateField(3)}}}
+      searchParam.page = 1{{{renderFilterDateField(3)}}}{{{renderResetFilterField(3)}}}
 {{{renderResetSorter(3)}}}router.push({ query: { ...searchParam{{{renderCallNormalizeDatesFunction(inline)}}} } })
     }
 

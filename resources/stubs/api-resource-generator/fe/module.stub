@@ -11,7 +11,7 @@ export default {
   namespaced: true,
 
   state: {
-    {{{tableName(BindingName)}}}: {
+    {{{tableName(ParamNamePlural)}}}: {
       meta: {},
       data: []
     },
@@ -20,12 +20,12 @@ export default {
   getters: {},
   mutations: {
     set{{{tableName(ClassNameSingular)}}}List (state: {{{tableName(ClassNameSingular)}}}StoreType, res: Pagination<{{{tableName(ClassNameSingular)}}}>): void {
-      state.{{{tableName(BindingName)}}} = res
+      state.{{{tableName(ParamNamePlural)}}} = res
     },
 
-    delete{{{tableName(ClassNameSingular)}}} (state: {{{tableName(ClassNameSingular)}}}StoreType, id: string): void {
-      const {{{tableName(BindingName)}}}Index = state.{{{tableName(BindingName)}}}.data.findIndex({{{tableName(BindingName)}}} => {{{tableName(BindingName)}}}.id === id)
-      state.{{{tableName(BindingName)}}}.data.splice({{{tableName(BindingName)}}}Index, 1)
+    delete{{{tableName(ClassNameSingular)}}} (state: {{{tableName(ClassNameSingular)}}}StoreType, id: {{{idType}}}): void {
+      const {{{tableName(ParamNamePlural)}}}Index = state.{{{tableName(ParamNamePlural)}}}.data.findIndex({{{tableName(ParamNamePlural)}}} => {{{tableName(ParamNamePlural)}}}.id === id)
+      state.{{{tableName(ParamNamePlural)}}}.data.splice({{{tableName(ParamNamePlural)}}}Index, 1)
     },
 
     set{{{tableName(ClassNameSingular)}}}Detail (state: {{{tableName(ClassNameSingular)}}}StoreType, res: ResponseDetail<{{{tableName(ClassNameSingular)}}}>): void {
@@ -45,7 +45,7 @@ export default {
 
     async show (
       context: ActionContext<{{{tableName(ClassNameSingular)}}}StoreType, RootState>,
-      id: number
+      id: {{{idType}}}
     ): Promise<ResponseDetail<{{{tableName(ClassNameSingular)}}}>> {
       return await {{{tableName(ClassNameSingular)}}}Api.show(id).then((result) => {
         context.commit('set{{{tableName(ClassNameSingular)}}}Detail', result)
@@ -64,7 +64,7 @@ export default {
 
     async update (
       context: ActionContext<{{{tableName(ClassNameSingular)}}}StoreType, RootState>,
-      req: { id: number, formState: {{{tableName(ClassNameSingular)}}}Body }
+      req: { id: {{{idType}}}, formState: {{{tableName(ClassNameSingular)}}}Body }
     ): Promise<ResponseMessage> {
       return await {{{tableName(ClassNameSingular)}}}Api.update(req.id, req.formState).then((result) => {
         return result
@@ -73,7 +73,7 @@ export default {
 
     async delete (
       context: ActionContext<{{{tableName(ClassNameSingular)}}}StoreType, RootState>,
-      id: number
+      id: {{{idType}}}
     ): Promise<ResponseMessage> {
       return await {{{tableName(ClassNameSingular)}}}Api.delete(id).then((result) => {
         context.commit('delete{{{tableName(ClassNameSingular)}}}', id)
