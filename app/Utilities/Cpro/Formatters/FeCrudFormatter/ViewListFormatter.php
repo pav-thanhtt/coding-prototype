@@ -220,7 +220,7 @@ class ViewListFormatter extends BaseFeFormatter
         if (!$this->hasSorter()) {
             return '';
         }
-        $code =  $this->renderHtml($indentTab, ["const sortedInfo = ref({\n...route.query.sort && { field: route.query.sort },\n...route.query.sort_direction && { order: `\${route.query.sort_direction}end` }\n})"]);
+        $code =  $this->renderHtml($indentTab, ["const sortedInfo = ref({\n  ...route.query.sort && { field: route.query.sort },\n  ...route.query.sort_direction && { order: `\${route.query.sort_direction}end` }\n})"]);
 
         return "\n\n{$code}\n";
     }
