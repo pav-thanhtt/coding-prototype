@@ -3,6 +3,7 @@
 namespace App\Utilities\Cpro\Formatters\BeCrudFormatter;
 
 use App\Utilities\Cpro\Definitions\TableDefinition;
+use Illuminate\Support\Str;
 
 class ServiceFormatter extends BaseBeFormatter
 {
@@ -23,5 +24,16 @@ class ServiceFormatter extends BaseBeFormatter
     public function getExportFileName(?string $options = ''): string
     {
         return $this->fileName[self::STUB_FILE_NAME];
+    }
+
+    public function renderPropId($file)
+    {
+        $str = sprintf("\$%s->id", Str::camel(Str::singular($this->tableDefinition->getTableName())));
+        $idColumn = $this->tableDefinition->getColumnByName('id');
+        if ($idColumn->isAutoIncrementing() || Str::contains($idColumn->getColumnDataType(), 'int')) {
+            return $str;
+        }
+
+        return "[$str]";
     }
 }

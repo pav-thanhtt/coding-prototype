@@ -60,6 +60,6 @@ class {{{tableName(ClassNameSingular)}}}Service
      */
     public function delete({{{tableName(ClassNameSingular)}}} ${{{tableName(PropertyName)}}}): mixed
     {
-        return $this->{{{tableName(PropertyName)}}}Repo->destroy(${{{tableName(PropertyName)}}}->id);
+        return $this->{{{tableName(PropertyName)}}}Repo->destroy({{{renderPropId}}});
     }
 }
