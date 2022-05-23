@@ -421,7 +421,7 @@ class ViewListFormatter extends BaseFeFormatter
                 }
             }
         );
-        return rtrim($this->renderHtml($indentTab, $variableFilterDatetimeComputed), ',');
+        return rtrim($this->renderHtml($indentTab, $variableFilterDatetimeComputed, ''), ',');
     }
 
     private function getVariableFilterDatetimeComputedContent(ColumnDefinition $columnDefinition, $file) {
@@ -452,17 +452,6 @@ class ViewListFormatter extends BaseFeFormatter
 
         foreach($columns as $column) {
             if($this->isFilterDatetimeField($column)) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private function hasSorter() {
-        $columns = $this->tableDefinition->getColumns();
-
-        foreach($columns as $column) {
-            if($this->isSortField($column)) {
                 return true;
             }
         }

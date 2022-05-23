@@ -2,7 +2,6 @@
 
 namespace App\Utilities\Cpro\Formatters\FeCrudFormatter;
 
-use App\Utilities\Cpro\Definitions\ColumnDefinition;
 use App\Utilities\Cpro\Definitions\TableDefinition;
 use Illuminate\Support\Str;
 
@@ -32,12 +31,8 @@ class TypeFilterBodyFormatter extends BaseFeFormatter
     public function renderTypeFilterBody(int $indentTab, $file): string
     {
         $lines = [
-            'per_page?' => '_@number',
-            'page?' => '_@number',
             'keyword?' => '_@string',
-            'include?' => '_@Include',
-            'sort?' => '_@string',
-            'sort_direction?' => '_@SortDirection',
+            'include?' => 'meta',
         ];
         $columns = $this->tableDefinition->getColumns();
 
@@ -58,8 +53,21 @@ class TypeFilterBodyFormatter extends BaseFeFormatter
         return $this->objectRender($lines, $indentTab);
     }
 
-    protected function getKey(ColumnDefinition $column)
+    public function renderImportSortBody($file)
     {
-        return $column->isNullable() ? "{$column->getColumnName()}?" : $column->getColumnName();
+        if (!$this->hasSorter()) {
+            return '';
+        }
+
+        return "import SortBody from './SortBody'\n";
+    }
+
+    public function useSortBody($file)
+    {
+        if (!$this->hasSorter()) {
+            return '';
+        }
+
+        return "SortBody, ";
     }
 }

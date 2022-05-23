@@ -32,14 +32,12 @@
 <script lang="ts">
 import {
   defineComponent,
-  UnwrapRef,
   reactive,
   onBeforeMount,
   computed
 } from 'vue'
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
-import {{{tableName(ClassNameSingular)}}}Body from '@/types/bodies/{{{tableName(ClassNameSingular)}}}Body'
 import Button from '@/components/commons/Button.vue'
 export default defineComponent({
   name: '{{{tableName(ClassNameSingular)}}}Create',
@@ -49,7 +47,7 @@ export default defineComponent({
     const router = useRouter()
     const store = useStore()
     const {{{tableName(BindingName)}}}Detail = computed(() => store.state.{{{tableName(BindingName)}}}.{{{tableName(BindingName)}}}Detail)
-    const current{{{tableName(ClassNameSingular)}}}: UnwrapRef<{{{tableName(ClassNameSingular)}}}Body> = reactive({
+    const current{{{tableName(ClassNameSingular)}}} = reactive({
 {{{renderInitCurrent(3)}}}
     })
     const isCreate = route.params.id === undefined

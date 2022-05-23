@@ -1,6 +1,5 @@
-type Include = 'meta'
-type SortDirection = 'desc' | 'asc'
-
-export default interface {{{tableName(ClassNameSingular)}}}FilterBody {
+import PaginationBody from './PaginationBody'
+{{{renderImportSortBody}}}
+export default interface {{{tableName(ClassNameSingular)}}}FilterBody extends {{{useSortBody}}}PaginationBody {
 {{{renderTypeFilterBody(1)}}}
 }

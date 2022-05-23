@@ -75,7 +75,7 @@ class ViewFormFormatter extends BaseFeFormatter
         $columns = $this->tableDefinition->getColumns();
         array_walk($columns,
             function ($column) use (&$lines) {
-                if ($this->isFillable($column) && !$column->isNullable()) {
+                if ($this->isFillable($column) && !$column->isNullable() && $this->isTextType($column)) {
                     $lines[] = $this->getRuleContent($column);
                 }
             }

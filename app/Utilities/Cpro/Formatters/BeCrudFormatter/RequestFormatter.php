@@ -102,8 +102,8 @@ class RequestFormatter extends BaseBeFormatter
             $this->isCurrent($column) ||
             Str::contains($columnName, 'token') ||
             (
-                ($columnType === 'timestamp' || $columnType === 'datetime')
-                && preg_match('/_at$/', $columnName)
+                ($columnType === 'timestamp' || $columnType === 'datetime') &&
+                in_array($columnName, ['created_at', 'updated_at', 'deleted_at'])
             )
         );
     }
@@ -253,8 +253,7 @@ class RequestFormatter extends BaseBeFormatter
             'time' => 'date_format:H:i:s',
             'date' => 'date|date_format:Y/m/d',
             'year' => 'date_format:Y',
-            'timestamp' => 'date|date_format:Y/m/d H:i:s|after_or_equal:1970/01/01 00:00:01|before_or_equal:2038/01/19 03:14:07',
-            default => 'date|date_format:Y/m/d H:i:s',
+            default => 'date',
         };
     }
 

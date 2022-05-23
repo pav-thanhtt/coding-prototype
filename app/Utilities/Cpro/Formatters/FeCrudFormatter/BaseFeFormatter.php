@@ -30,10 +30,6 @@ abstract class BaseFeFormatter extends BaseFormatter
         'double' => 'number'
     ];
 
-    private $formControl = [
-        'varchar' => 'input',
-    ];
-
     public function __construct(TableDefinition $tableDefinition)
     {
         parent::__construct($tableDefinition);
@@ -51,8 +47,13 @@ abstract class BaseFeFormatter extends BaseFormatter
         return false;
     }
 
-    protected function typeValue(ColumnDefinition $column)
+    protected function typeValue(ColumnDefinition $column, $type = false)
     {
+        if ($type) {
+            $tsType = $this->tsType[$column->getColumnDataType()] ?? 'any';
+            return sprintf('%s%s', '_@', $tsType === 'Date' ? 'Date | Moment' : $tsType );
+        }
+
         return sprintf('%s%s', '_@', $this->tsType[$column->getColumnDataType()] ?? 'any');
     }
 
@@ -74,9 +75,11 @@ abstract class BaseFeFormatter extends BaseFormatter
 
     protected function initValue(ColumnDefinition $columnDefinition)
     {
-        return match ($this->formControl[$columnDefinition->getColumnDataType()]) {
-            'input' => '',
-        };
+        if ($this->isTextType($columnDefinition)) {
+            return '';
+        }
+
+        return '_@undefined';
     }
 
     protected function renderHtml(int $indentTab, array $groups, string $twoLine = "\n")
@@ -124,5 +127,16 @@ abstract class BaseFeFormatter extends BaseFormatter
         return 'string';
       }
       return 'any';
+    }
+
+    protected function hasSorter() {
+        $columns = $this->tableDefinition->getColumns();
+
+        foreach($columns as $column) {
+            if($this->isSortField($column)) {
+                return true;
+            }
+        }
+        return false;
     }
 }

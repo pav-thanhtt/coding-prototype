@@ -114,7 +114,7 @@ abstract class BaseFormatter
             $this->isCurrent($column) ||
             (
                 ($dataType === 'timestamp' || $dataType === 'datetime') &&
-                preg_match('/_at$/', $colName)
+                in_array($colName, ['created_at', 'updated_at', 'deleted_at'])
             )
         );
     }

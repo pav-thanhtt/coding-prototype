@@ -1,3 +1,3 @@
-export default interface {{{tableName(ClassNameSingular)}}}Body {
+{{{renderImportMomentType}}}export default interface {{{tableName(ClassNameSingular)}}}Body {
 {{{renderTypeBody(1)}}}
 }
