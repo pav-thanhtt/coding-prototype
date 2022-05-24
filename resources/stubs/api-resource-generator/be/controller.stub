@@ -1,0 +1,114 @@
+<?php
+
+declare(strict_types = 1);
+
+namespace App\Http\Controllers\Api\V1;
+
+use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\{{{tableName(ClassNameSingular)}}}\{{{tableName(ClassNameSingular)}}}SearchRequest;
+use App\Http\Requests\Api\{{{tableName(ClassNameSingular)}}}\{{{tableName(ClassNameSingular)}}}StoreRequest;
+use App\Http\Requests\Api\{{{tableName(ClassNameSingular)}}}\{{{tableName(ClassNameSingular)}}}UpdateRequest;
+use App\Http\Resources\Api\{{{tableName(ClassNameSingular)}}}Resource;
+use App\Http\Resources\MetaResource;
+use App\Models\{{{tableName(ClassNameSingular)}}};
+use App\Services\Api\{{{tableName(ClassNameSingular)}}}Service;
+use App\Traits\ResponseTrait;
+use Illuminate\Http\JsonResponse;
+
+class {{{tableName(ClassNameSingular)}}}Controller extends Controller
+{
+    use ResponseTrait;
+
+    /**
+     * @var {{{tableName(ClassNameSingular)}}}Service
+     */
+    private {{{tableName(ClassNameSingular)}}}Service ${{{tableName(PropertyName)}}}Service;
+
+    /**
+     * Constructor
+     *
+     * @param {{{tableName(ClassNameSingular)}}}Service ${{{tableName(PropertyName)}}}Service
+     */
+    public function __construct({{{tableName(ClassNameSingular)}}}Service ${{{tableName(PropertyName)}}}Service)
+    {
+        $this->{{{tableName(PropertyName)}}}Service = ${{{tableName(PropertyName)}}}Service;
+    }
+
+    /**
+     * Display a listing of the resource.
+     *
+     * @param {{{tableName(ClassNameSingular)}}}SearchRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function index({{{tableName(ClassNameSingular)}}}SearchRequest $request): JsonResponse
+    {
+        ${{{tableName(ParamNamePlural)}}} = $this->{{{tableName(PropertyName)}}}Service->getList($request->validated());
+
+        $meta = [];
+        if ('meta' === $request->query('include')) {
+            $meta = ['meta' => new MetaResource(${{{tableName(ParamNamePlural)}}})];
+        }
+
+        return $this->success($meta + ['data' => {{{tableName(ClassNameSingular)}}}Resource::collection(${{{tableName(ParamNamePlural)}}}->items())]);
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param {{{tableName(ClassNameSingular)}}}StoreRequest $request
+     *
+     * @return JsonResponse
+     */
+    public function store({{{tableName(ClassNameSingular)}}}StoreRequest $request): JsonResponse
+    {
+        $data = $this->{{{tableName(PropertyName)}}}Service->create($request->validated());
+
+        return $this->success([
+            'data' => new {{{tableName(ClassNameSingular)}}}Resource($data),
+        ]);
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param {{{tableName(ClassNameSingular)}}} ${{{tableName(BindingName)}}}
+     *
+     * @return JsonResponse
+     */
+    public function show({{{tableName(ClassNameSingular)}}} ${{{tableName(BindingName)}}}): JsonResponse
+    {
+        return $this->success([
+            'data' => new {{{tableName(ClassNameSingular)}}}Resource(${{{tableName(BindingName)}}}),
+        ]);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param {{{tableName(ClassNameSingular)}}}UpdateRequest $request
+     * @param {{{tableName(ClassNameSingular)}}} ${{{tableName(BindingName)}}}
+     *
+     * @return JsonResponse
+     */
+    public function update({{{tableName(ClassNameSingular)}}}UpdateRequest $request, {{{tableName(ClassNameSingular)}}} ${{{tableName(BindingName)}}}): JsonResponse
+    {
+        $this->{{{tableName(PropertyName)}}}Service->update(${{{tableName(BindingName)}}}, $request->validated());
+
+        return $this->success();
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param {{{tableName(ClassNameSingular)}}} ${{{tableName(BindingName)}}}
+     *
+     * @return JsonResponse
+     */
+    public function destroy({{{tableName(ClassNameSingular)}}} ${{{tableName(BindingName)}}}): JsonResponse
+    {
+        $this->{{{tableName(PropertyName)}}}Service->delete(${{{tableName(BindingName)}}});
+
+        return $this->success();
+    }
+}

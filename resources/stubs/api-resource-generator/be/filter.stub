@@ -1,0 +1,24 @@
+<?php
+
+declare(strict_types = 1);
+
+namespace App\ModelFilters;
+
+use EloquentFilter\ModelFilter;
+
+class {{{tableName(ClassNameSingular)}}}Filter extends ModelFilter
+{
+    public function keyword($value)
+    {
+        $searchFields = [
+{{{renderSearchFields(3)}}}
+        ];
+
+        return $this->where(function ($query) use ($searchFields, $value) {
+            foreach ($searchFields as $searchItem) {
+                $query->orWhere($searchItem, 'LIKE', "%{$value}%");
+            }
+        });
+    }
+{{{renderMethodFilters(1)}}}
+}
