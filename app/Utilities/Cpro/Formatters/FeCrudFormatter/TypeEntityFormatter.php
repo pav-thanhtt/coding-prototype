@@ -35,7 +35,7 @@ class TypeEntityFormatter extends BaseFeFormatter
         array_walk($columns,
             function ($column) use (&$lines) {
                 if (!$this->isHidden($column) && !$this->isSoftDeletes($column)) {
-                    $lines[$column->getColumnName()] = $this->typeValue($column);
+                    $lines[$this->getKey($column)] = $this->typeValue($column);
                 }
             }
         );

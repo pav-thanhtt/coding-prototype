@@ -41,10 +41,10 @@ class TypeFilterBodyFormatter extends BaseFeFormatter
                 if ($this->isMethodFilter($column)) {
                     $columnName = $column->getColumnName();
                     if (Str::contains($columnName, '_at')) {
-                        $lines["{$columnName}_from"] = '_@string';
-                        $lines["{$columnName}_to"] = '_@string';
+                        $lines["{$columnName}_from?"] = '_@string';
+                        $lines["{$columnName}_to?"] = '_@string';
                     } else {
-                        $lines[$columnName] = $this->typeValue($column);
+                        $lines[$this->getKey($column)] = $this->typeValue($column);
                     }
                 }
             }
