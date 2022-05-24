@@ -84,6 +84,24 @@ class ViewFormFormatter extends BaseFeFormatter
         return rtrim($this->renderHtml($indentTab, $lines), ',');
     }
 
+    public function renderImportDateFormat($file): string
+    {
+        if (!$this->hasFillableDateTime()) {
+            return '';
+        }
+
+        return "import { DATE_TIME_FORMAT } from '@/config/constants'\n";
+    }
+
+    public function renderReturnDateFormat($indentTab, $file): string
+    {
+        if (!$this->hasFillableDateTime()) {
+            return '';
+        }
+
+        return sprintf("\n%sDATE_TIME_FORMAT,", $this->indentSpace($indentTab));
+    }
+
     private function getRuleContent(ColumnDefinition $column) {
         return "{$column->getColumnName()}: {\n  required: true,\n  trigger: 'blur'\n},";
     }
@@ -106,6 +124,7 @@ class ViewFormFormatter extends BaseFeFormatter
     protected function renderFormControl(int $indentTab, $file)
     {
         $dataType = $this->column->getColumnDataType();
+        $this->tableName = $this->tableName('ClassNameSingular');
         if ($dataType === 'enum' || $dataType === 'tinyint' && $this->column->getMethodParameters()[0] === 1) {
             $stubContent = $this->getStubFile(self::FORM_CONTROL_SELECT_STUB_NAME);
             $this->optionList = '';
@@ -117,6 +136,8 @@ class ViewFormFormatter extends BaseFeFormatter
                 }
                 $this->optionList = rtrim($this->optionList, "\n");
             }
+
+            return $this->renderHtml($indentTab, [$this->replaceVariable($stubContent)]);
         } else {
             $stubContent = $this->getStubFile(self::FORM_CONTROL_STUB_NAME);
             $this->columnTag = match ($dataType) {
@@ -124,12 +145,22 @@ class ViewFormFormatter extends BaseFeFormatter
                 'text', 'longtext', 'mediumtext' => 'textarea',
                 'int', 'bigint', 'mediumint', 'smallint' => 'input-number',
                 'float', 'double' => "input-number :step=\"0.01\"",
-                'datetime', 'timestamp' => 'date-picker'
+                'datetime', 'timestamp' => 'date-picker :format="DATE_TIME_FORMAT"'
             };
         }
 
-        $this->tableName = $this->tableName('ClassNameSingular');
-
         return sprintf('%s%s', $this->indentSpace($indentTab), $this->replaceVariable($stubContent));
+    }
+
+    private function hasFillableDateTime () {
+        $columns = $this->tableDefinition->getColumns();
+
+        foreach($columns as $column) {
+            if ($this->isFillable($column) && $this->isDateOrTimeType($column)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

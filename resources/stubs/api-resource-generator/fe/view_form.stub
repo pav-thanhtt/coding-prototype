@@ -39,6 +39,7 @@ import {
 import { useStore } from 'vuex'
 import { useRoute, useRouter } from 'vue-router'
 import Button from '@/components/commons/Button.vue'
+{{{renderImportDateFormat}}}
 export default defineComponent({
   name: '{{{tableName(ClassNameSingular)}}}Create',
   components: { Button },
@@ -74,7 +75,7 @@ export default defineComponent({
     }
     return {
       formName,
-      current{{{tableName(ClassNameSingular)}}},
+      current{{{tableName(ClassNameSingular)}}},{{{renderReturnDateFormat(3)}}}
       onSubmit,
       onCancel,
       rules

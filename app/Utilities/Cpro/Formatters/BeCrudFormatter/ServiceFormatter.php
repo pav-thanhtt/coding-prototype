@@ -28,7 +28,7 @@ class ServiceFormatter extends BaseBeFormatter
 
     public function renderPropId($file)
     {
-        $str = sprintf("\$%s->id", Str::camel(Str::singular($this->tableDefinition->getTableName())));
+        $str = sprintf("\$%s->id", $this->tableName('PropertyName'));
         $idColumn = $this->tableDefinition->getColumnByName('id');
         if ($idColumn->isAutoIncrementing() || Str::contains($idColumn->getColumnDataType(), 'int')) {
             return $str;
