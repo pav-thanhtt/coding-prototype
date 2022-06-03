@@ -287,6 +287,15 @@ class ViewListFormatter extends BaseFeFormatter
         return ",\n" . $this->renderHtml($indentTab, ["...route.query.sort && { sort: route.query.sort },\n...route.query.sort_direction && { sort_direction: route.query.sort_direction }"]);
     }
 
+    public function renderSorterWatch(int $indentTab, $file)
+    {
+        if (!$this->hasSorter()) {
+            return '';
+        }
+
+        return ",\n" . $this->renderHtml($indentTab, ["...route.query.sort && { sort: [route.query.sort] },\n...route.query.sort_direction && { sort_direction: [route.query.sort_direction] }"]);
+    }
+
     public function renderNormalizeDatesWatch(int $indentTab, $file)
     {
         $normalizeDatesWatch = [];

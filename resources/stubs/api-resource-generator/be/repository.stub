@@ -5,7 +5,6 @@ declare(strict_types = 1);
 namespace App\Repositories;
 
 use App\Models\{{{tableName(ClassNameSingular)}}};
-use Illuminate\Database\Eloquent\Builder;
 
 class {{{tableName(ClassNameSingular)}}}Repository
 {
@@ -17,29 +16,6 @@ class {{{tableName(ClassNameSingular)}}}Repository
     public function __construct({{{tableName(ClassNameSingular)}}} ${{{tableName(PropertyName)}}}Model)
     {
         $this->{{{tableName(PropertyName)}}}Model = ${{{tableName(PropertyName)}}}Model;
-    }
-
-    /**
-     * @param Builder $builder
-     * @param array $requestData
-     *
-     * @return Builder
-     */
-    private function __sort(Builder $builder, array $requestData): Builder
-    {
-        $sortField = isset($requestData['sort']) && ! empty($requestData['sort']) ? $requestData['sort'] : 'updated_at';
-
-        $direction = isset($requestData['sort_direction']) && ! empty($requestData['sort_direction']) ? $requestData['sort_direction'] : 'desc';
-
-        $sortColumns = [
-{{{renderSortFields(3)}}}
-        ];
-
-        if (in_array($sortField, $sortColumns, true)) {
-            $builder = $builder->orderBy($sortField, $direction);
-        }
-
-        return $builder;
     }
 
     public function getAll()
@@ -55,16 +31,15 @@ class {{{tableName(ClassNameSingular)}}}Repository
             return $builder->first();
         }
 
-        return $this->__sort($builder, $requestData)->get();
+        return $builder->sortable($requestData['sorts'] ?? null)->get();
     }
 
     public function getFilteredPaginator(array $requestData)
     {
-        $perPage = $requestData['per_page'] ?? config('eloquentfilter.paginate_limit');
-
-        ${{{tableName(ParamNamePlural)}}} = $this->{{{tableName(PropertyName)}}}Model->filter($requestData);
-
-        return $this->__sort(${{{tableName(ParamNamePlural)}}}, $requestData)->paginate($perPage);
+        return $this->{{{tableName(PropertyName)}}}Model
+            ->filter($requestData)
+            ->sortable($requestData['sorts'] ?? null)
+            ->paginate($requestData['per_page']);
     }
 
     public function getByPK(int $id)

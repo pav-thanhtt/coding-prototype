@@ -38,10 +38,16 @@ abstract class BaseFormatter
             $matches = $matches[1];
             if (preg_match('/\((\d*|\w*)\)/', trim($matches), $matchParam)) {
                 if (!empty($param = trim($matchParam[0], '() '))) {
-                    return $this->{trim(Str::replace($matchParam[0], '', $matches))}($param, $file);
+                    if (method_exists($this, $method = trim(Str::replace($matchParam[0], '', $matches)))) {
+                        return $this->{$method}($param, $file);
+                    }
+                    return '';
                 }
             }
-            return $this->{trim($matches)}($file);
+            if (method_exists($this, $method = trim($matches))) {
+                return $this->{trim($matches)}($file);
+            }
+            return '';
         }, $stub);
     }
 
@@ -101,6 +107,17 @@ abstract class BaseFormatter
         }
 
         return rtrim($resultString, "\n");
+    }
+
+    protected function hasSorter() {
+        $columns = $this->tableDefinition->getColumns();
+
+        foreach($columns as $column) {
+            if($this->isSortField($column)) {
+                return true;
+            }
+        }
+        return false;
     }
 
     protected function isFillable(ColumnDefinition $column): bool
@@ -241,15 +258,15 @@ abstract class BaseFormatter
     {
         $comment = "{$this->indentSpace($indentTab)}/**\n";
         if (!empty($method['params'])) {
-            $comment .= implode("", array_map(fn($param) => "{$this->indentSpace($indentTab)}* @param {$param}\n", $method['params']));
+            $comment .= implode("", array_map(fn($param) => "{$this->indentSpace($indentTab)} * @param {$param}\n", $method['params']));
         }
         if (isset($method['returnType']) && 0 !== $method['returnType']) {
-            $comment .= "{$this->indentSpace($indentTab)}* @return {$method['returnType']}\n";
+            $comment .= "{$this->indentSpace($indentTab)} * @return {$method['returnType']}\n";
         } else {
-            $comment .= "{$this->indentSpace($indentTab)}* @return mixed\n";
+            $comment .= "{$this->indentSpace($indentTab)} * @return mixed\n";
         }
 
-        $comment .= "{$this->indentSpace($indentTab)}*/\n";
+        $comment .= "{$this->indentSpace($indentTab)} */\n";
 
         return $comment;
     }

@@ -24,7 +24,7 @@ export default {
     },
 
     delete{{{tableName(ClassNameSingular)}}} (state: {{{tableName(ClassNameSingular)}}}StoreType, id: {{{idType}}}): void {
-      const {{{tableName(ParamNamePlural)}}}Index = state.{{{tableName(ParamNamePlural)}}}.data.findIndex({{{tableName(ParamNamePlural)}}} => {{{tableName(ParamNamePlural)}}}.id === id)
+      const {{{tableName(ParamNamePlural)}}}Index = state.{{{tableName(ParamNamePlural)}}}.data.findIndex({{{tableName(BindingName)}}} => {{{tableName(BindingName)}}}.id === id)
       state.{{{tableName(ParamNamePlural)}}}.data.splice({{{tableName(ParamNamePlural)}}}Index, 1)
     },
 

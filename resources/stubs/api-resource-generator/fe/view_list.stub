@@ -119,12 +119,12 @@ export default defineComponent({
       return {
         per_page: route.query.per_page || PER_PAGE_DEFAULT,
         page: route.query.page || 1,
-        ...route.query.keyword && { keyword: route.query.keyword }{{{renderFilterFieldQueryString(4)}}}{{{renderSorterQueryString(4)}}}
+        ...route.query.keyword && { keyword: route.query.keyword }{{{renderFilterFieldQueryString(4)}}}
       }
     }
 
     const searchParam = reactive({
-      ...queryString(){{{renderSearchParamReactive(3)}}}
+      ...queryString(){{{renderSearchParamReactive(3)}}}{{{renderSorterQueryString(3)}}}
     })
 
     const {{{tableName(ParamNamePlural)}}} = computed(() => store.state.{{{tableName(BindingName)}}}.{{{tableName(ParamNamePlural)}}})
@@ -144,7 +144,7 @@ export default defineComponent({
       async () => {
         await store.dispatch('{{{tableName(BindingName)}}}/getList', {
           include: 'meta',
-          ...queryString(){{{renderNormalizeDatesWatch(5)}}}
+          ...queryString(){{{renderNormalizeDatesWatch(5)}}}{{{renderSorterWatch(5)}}}
         })
       },
       {

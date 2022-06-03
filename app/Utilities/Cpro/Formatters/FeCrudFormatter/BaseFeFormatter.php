@@ -54,7 +54,13 @@ abstract class BaseFeFormatter extends BaseFormatter
             return sprintf('%s%s', '_@', $tsType === 'Date' ? 'Date | Moment' : $tsType );
         }
 
-        return sprintf('%s%s', '_@', $this->tsType[$column->getColumnDataType()] ?? 'any');
+        $tsType = $column->getColumnDataType();
+
+        if (preg_match('/id$/', $column->getColumnName()) && Str::contains($column->getColumnDataType(), 'int')) {
+            $tsType = 'int';
+        }
+
+        return sprintf('%s%s', '_@', $this->tsType[$tsType] ?? 'any');
     }
 
     protected function getKey(ColumnDefinition $column)
@@ -127,16 +133,5 @@ abstract class BaseFeFormatter extends BaseFormatter
         return 'string';
       }
       return 'any';
-    }
-
-    protected function hasSorter() {
-        $columns = $this->tableDefinition->getColumns();
-
-        foreach($columns as $column) {
-            if($this->isSortField($column)) {
-                return true;
-            }
-        }
-        return false;
     }
 }
