@@ -6,54 +6,10 @@ namespace App\Repositories;
 
 use App\Models\{{{tableName(ClassNameSingular)}}};
 
-class {{{tableName(ClassNameSingular)}}}Repository
+class {{{tableName(ClassNameSingular)}}}Repository extends AbstractRepository
 {
-    /**
-     * @var {{{tableName(ClassNameSingular)}}}
-     */
-    private {{{tableName(ClassNameSingular)}}} ${{{tableName(PropertyName)}}}Model;
-
-    public function __construct({{{tableName(ClassNameSingular)}}} ${{{tableName(PropertyName)}}}Model)
+    public function modelClass(): string
     {
-        $this->{{{tableName(PropertyName)}}}Model = ${{{tableName(PropertyName)}}}Model;
-    }
-
-    public function getAll()
-    {
-        return $this->{{{tableName(PropertyName)}}}Model->all();
-    }
-
-    public function getFiltered(array $requestData, $returnFirstFlg = false)
-    {
-        $builder = $this->{{{tableName(PropertyName)}}}Model->filter($requestData);
-
-        if ($returnFirstFlg) {
-            return $builder->first();
-        }
-
-        return $builder->sortable($requestData['sorts'] ?? null)->get();
-    }
-
-    public function getFilteredPaginator(array $requestData)
-    {
-        return $this->{{{tableName(PropertyName)}}}Model
-            ->filter($requestData)
-            ->sortable($requestData['sorts'] ?? null)
-            ->paginate($requestData['per_page']);
-    }
-
-    public function getByPK(int $id)
-    {
-        return $this->{{{tableName(PropertyName)}}}Model->find($id);
-    }
-
-    public function updateOrCreate(array $attributes, array $values = [])
-    {
-        return $this->{{{tableName(PropertyName)}}}Model->updateOrCreate($attributes, $values);
-    }
-
-    public function destroy(int | array $ids)
-    {
-        return $this->{{{tableName(PropertyName)}}}Model->destroy($ids);
+        return {{{tableName(ClassNameSingular)}}}::class;
     }
 }
