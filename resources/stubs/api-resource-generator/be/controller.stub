@@ -22,7 +22,7 @@ class {{{tableName(ClassNameSingular)}}}Controller extends Controller
     /**
      * @var {{{tableName(ClassNameSingular)}}}Service
      */
-    private {{{tableName(ClassNameSingular)}}}Service ${{{tableName(PropertyName)}}}Service;
+    private ${{{tableName(PropertyName)}}}Service;
 
     /**
      * Constructor

@@ -15,7 +15,7 @@ class {{{tableName(ClassNameSingular)}}}Service
     /**
      * @var {{{tableName(ClassNameSingular)}}}Repository
      */
-    private {{{tableName(ClassNameSingular)}}}Repository ${{{tableName(PropertyName)}}}Repo;
+    private ${{{tableName(PropertyName)}}}Repo;
 
     public function __construct({{{tableName(ClassNameSingular)}}}Repository ${{{tableName(PropertyName)}}}Repo)
     {
