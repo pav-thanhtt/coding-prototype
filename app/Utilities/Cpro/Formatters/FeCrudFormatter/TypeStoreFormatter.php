@@ -1,14 +1,13 @@
 <?php
 
-namespace App\Utilities\Cpro\Formatters\RmsfFormatter;
+namespace App\Utilities\Cpro\Formatters\FeCrudFormatter;
 
 use App\Utilities\Cpro\Definitions\TableDefinition;
-use App\Utilities\Cpro\Formatters\BeCrudFormatter\BaseBeFormatter;
 
-class RepositoryFormatter extends BaseBeFormatter
+class TypeStoreFormatter extends BaseFeFormatter
 {
-    private const STUB_FILE_NAME = 'repository';
-    private const EXPORT_FILE_NAME_SUFFIX = 'Repository.php';
+    private const STUB_FILE_NAME = 'type_store';
+    private const EXPORT_FILE_NAME_SUFFIX = 'StoreType.ts';
 
     public function __construct(TableDefinition $tableDefinition)
     {
@@ -20,7 +19,6 @@ class RepositoryFormatter extends BaseBeFormatter
     {
         return self::STUB_FILE_NAME;
     }
-
 
     public function getExportFileName(?string $options = ''): string
     {

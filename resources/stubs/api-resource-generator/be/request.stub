@@ -3,12 +3,12 @@
 declare(strict_types = 1);
 
 namespace App\Http\Requests\Api\{{{tableName(ClassNameSingularRequest)}}};
-
+{{{renderClassRequestTrait}}}
 use Illuminate\Foundation\Http\FormRequest;
-{{{renderClassRule}}}
+
 class {{{tableName(ClassNameSingular)}}}Request extends FormRequest
 {
-    /**
+    {{{renderUseRequestTrait}}}/**
      * Determine if the user is authorized to make this request.
      *
      * @return bool
@@ -27,6 +27,6 @@ class {{{tableName(ClassNameSingular)}}}Request extends FormRequest
     {
         return [
 {{{renderRules(3)}}}
-        ];
-    }
+        ]{{{renderRequestSearchRules}}};
+    }{{{renderRequestSearchPrepareForValidation(1)}}}
 }

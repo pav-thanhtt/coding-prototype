@@ -1,0 +1,61 @@
+import {{{tableName(ClassNameSingular)}}}FilterBody from '@/types/bodies/{{{tableName(ClassNameSingular)}}}FilterBody'
+import {{{tableName(ClassNameSingular)}}}Body from '@/types/bodies/{{{tableName(ClassNameSingular)}}}Body'
+import {{{tableName(ClassNameSingular)}}} from '@/types/entities/{{{tableName(ClassNameSingular)}}}'
+import { ResponseMessage, ResponseDetail, Pagination } from '@/types/responses/Response'
+import api from '@/utils/api'
+
+/**
+ * Export class {{{tableName(ClassNameSingular)}}}Api
+ */
+export default class {{{tableName(ClassNameSingular)}}}Api {
+  /**
+   * Get {{{tableName(ClassNamePlural)}}}
+   * @return Promise|Error
+   */
+
+  public static async getList (
+    params?: {{{tableName(ClassNameSingular)}}}FilterBody
+  ): Promise<Pagination<{{{tableName(ClassNameSingular)}}}>> {
+    return await api.get('/{{{tableName(ParamNamePlural)}}}', { params })
+  }
+
+  /*
+   * show
+   * @param id
+   * @returns
+   */
+
+  public static async show (id: {{{idType}}}): Promise<ResponseDetail<{{{tableName(ClassNameSingular)}}}>> {
+    return await api.get(`/{{{tableName(ParamNamePlural)}}}/${id}`)
+  }
+
+  /**
+   * Create {{{tableName(ClassNameSingular)}}}
+   *
+   * @return Promise|Error
+   */
+  public static async store (data: {{{tableName(ClassNameSingular)}}}Body): Promise<ResponseDetail<{{{tableName(ClassNameSingular)}}}>> {
+    return await api.post('/{{{tableName(ParamNamePlural)}}}', data)
+  }
+
+  /**
+   * Update {{{tableName(ClassNameSingular)}}}
+   *
+   * @return Promise|Error
+   */
+  public static async update (
+    id: {{{idType}}},
+    data: {{{tableName(ClassNameSingular)}}}Body
+  ): Promise<ResponseMessage> {
+    return await api.put(`/{{{tableName(ParamNamePlural)}}}/${id}`, data)
+  }
+
+  /**
+   * delete
+   * @param id
+   * @returns
+   */
+  public static async delete (id: {{{idType}}}): Promise<ResponseMessage> {
+    return await api.delete(`/{{{tableName(ParamNamePlural)}}}/${id}`)
+  }
+}

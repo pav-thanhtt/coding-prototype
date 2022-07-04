@@ -1,0 +1,4 @@
+<a-space  direction="horizontal">
+  <a-date-picker :format="DATE_FORMAT" v-model:value="searchParam.{!columnName!}_from" />~
+  <a-date-picker :format="DATE_FORMAT" v-model:value="searchParam.{!columnName!}_to" />
+</a-space>

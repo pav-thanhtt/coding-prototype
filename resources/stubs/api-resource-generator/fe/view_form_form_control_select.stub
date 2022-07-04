@@ -1,0 +1,3 @@
+<a-select v-model:value="current{!tableName!}.{!columnName!}" placeholder="Select {!columnLabel!}">
+{!optionList!}
+</a-select>

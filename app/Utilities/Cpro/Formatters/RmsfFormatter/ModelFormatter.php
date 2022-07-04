@@ -44,6 +44,22 @@ class ModelFormatter extends BaseBeFormatter
         return '';
     }
 
+    protected function renderClassSortableTrait(): string
+    {
+        if ($this->hasSorter()) {
+            return "\nuse App\Traits\SortableTrait;";
+        }
+        return '';
+    }
+
+    protected function renderUseSortableTrait(): string
+    {
+        if ($this->hasSorter()) {
+            return ', SortableTrait';
+        }
+        return '';
+    }
+
     /**
      * @param int $indentTab
      * @param $file
@@ -107,6 +123,38 @@ class ModelFormatter extends BaseBeFormatter
         );
     }
 
+    protected function renderDates(int $indentTab): string
+    {
+        $columns = $this->tableDefinition->getColumns();
+
+        $dates = array_map(function ($column) {
+            if ($this->isDateOrTimeType($column) &&
+            !in_array($column->getColumnName(), ['created_at', 'updated_at', 'deleted_at']) &&
+            !$this->isCurrent($column)
+            ) {
+                return $column->getColumnName();
+            }
+        }, $columns);
+
+        $dates = $this->cleanArray($dates);
+
+        if (empty($dates)) {
+            return '';
+        }
+
+        $lines = $this->arrayRender($dates, $indentTab + 1);
+
+        return sprintf(
+            '%s%s%s%s%s%s',
+            $this->indentSpace($indentTab),
+            "protected \$dates = [\n",
+            $lines,
+            "\n",
+            $this->indentSpace($indentTab),
+            "];"
+        );
+    }
+
     protected function renderIncrementing(int $indentTab): string
     {
         $idColumn = $this->tableDefinition->getColumnByName('id');
@@ -130,12 +178,41 @@ class ModelFormatter extends BaseBeFormatter
         return '';
     }
 
+    protected function renderSortable(int $indentTab): string
+    {
+        $sortFields = array_map(function ($column) {
+            if ($this->isSortField($column)) {
+                return $column->getColumnName();
+            }
+        }, $this->tableDefinition->getColumns());
+
+        $sortFields = $this->cleanArray($sortFields);
+
+        if (empty($sortFields)) {
+            return '';
+        }
+
+        $lines = $this->arrayRender($sortFields, $indentTab + 1);
+
+        return sprintf(
+            '%s%s%s%s%s%s',
+            $this->indentSpace($indentTab),
+            "protected \$sortable = [\n",
+            $lines,
+            "\n",
+            $this->indentSpace($indentTab),
+            "];"
+        );
+    }
+
     protected function renderProperty(int $indentTab, $file): string
     {
         $text = $this->renderIncrementing($indentTab, $file);
-        $text = sprintf('%s%s%s', $text, empty($text) ? $text : "\n\n", $this->renderKeyType($indentTab, $file));
-        $text = sprintf('%s%s%s', $text, empty($text) ? $text : "\n\n", $this->renderFillable($indentTab, $file));
-        $text = sprintf('%s%s%s', $text, empty($text) ? $text : "\n\n", $this->renderHidden($indentTab, $file));
+        $text = sprintf('%s%s%s', $text, empty($text) ? $text : "\n\n", $keyType = $this->renderKeyType($indentTab, $file));
+        $text = sprintf('%s%s%s', $text, empty($keyType) ? $keyType : "\n\n", $fillable = $this->renderFillable($indentTab, $file));
+        $text = sprintf('%s%s%s', $text, empty($fillable) ? $fillable : "\n\n", $hidden = $this->renderHidden($indentTab, $file));
+        $text = sprintf('%s%s%s', $text, empty($hidden) ? $hidden : "\n\n", $dates = $this->renderDates($indentTab, $file));
+        $text = sprintf('%s%s%s', $text, empty($dates) ? $dates : "\n\n", $this->renderSortable($indentTab, $file));
 
         return rtrim($text);
     }

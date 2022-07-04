@@ -187,7 +187,7 @@ class FactoryFormatter extends BaseBeFormatter
                 }
 
                 if (Str::contains($columnName, 'password')) {
-                    return 'bcrypt(\'password\')';
+                    return '\'P@ssw0rd\'';
                 }
 
                 if (Str::contains($columnName, 'name')) {
@@ -201,6 +201,9 @@ class FactoryFormatter extends BaseBeFormatter
                         return '$this->faker->userName()';
                     }
                     return '$this->faker->name()';
+                }
+                if (Str::contains($columnName, 'id')) {
+                    return '$this->faker->regexify(\'[A-Za-z0-9]{' . $params[0] . '}\')';
                 }
                 return '$this->faker->text(' . $length . ')';
         }

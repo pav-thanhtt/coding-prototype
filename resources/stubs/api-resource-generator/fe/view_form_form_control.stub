@@ -1,0 +1,1 @@
+<a-{!columnTag!} v-model:value="current{!tableName!}.{!columnName!}" placeholder="Enter {!columnLabel!}" />

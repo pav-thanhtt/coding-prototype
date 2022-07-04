@@ -9,8 +9,6 @@ use Illuminate\Support\Str;
 
 abstract class BaseFormatter
 {
-    private const INDENT_SPACE_FORMAT_DEFAULT = 4;
-
     protected string $stubFileName;
 
     protected array $fileName;
@@ -40,10 +38,16 @@ abstract class BaseFormatter
             $matches = $matches[1];
             if (preg_match('/\((\d*|\w*)\)/', trim($matches), $matchParam)) {
                 if (!empty($param = trim($matchParam[0], '() '))) {
-                    return $this->{trim(Str::replace($matchParam[0], '', $matches))}($param, $file);
+                    if (method_exists($this, $method = trim(Str::replace($matchParam[0], '', $matches)))) {
+                        return $this->{$method}($param, $file);
+                    }
+                    return '';
                 }
             }
-            return $this->{trim($matches)}($file);
+            if (method_exists($this, $method = trim($matches))) {
+                return $this->{trim($matches)}($file);
+            }
+            return '';
         }, $stub);
     }
 
@@ -105,6 +109,17 @@ abstract class BaseFormatter
         return rtrim($resultString, "\n");
     }
 
+    protected function hasSorter() {
+        $columns = $this->tableDefinition->getColumns();
+
+        foreach($columns as $column) {
+            if($this->isSortField($column)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     protected function isFillable(ColumnDefinition $column): bool
     {
         $dataType = $column->getColumnDataType();
@@ -116,7 +131,7 @@ abstract class BaseFormatter
             $this->isCurrent($column) ||
             (
                 ($dataType === 'timestamp' || $dataType === 'datetime') &&
-                preg_match('/_at$/', $colName)
+                in_array($colName, ['created_at', 'updated_at', 'deleted_at'])
             )
         );
     }
@@ -135,6 +150,11 @@ abstract class BaseFormatter
             'deleted_at' !== $columnName && 'updated_at' !== $columnName &&
             Str::contains($columnName, '_at') &&
             ($dataType === 'timestamp' || $dataType === 'datetime');
+    }
+
+    protected function isSortField(ColumnDefinition $column): bool
+    {
+        return !$this->isHidden($column) && 'deleted_at' !== $column->getColumnName();
     }
 
     protected function isTextType(ColumnDefinition $column): bool
@@ -157,6 +177,15 @@ abstract class BaseFormatter
         return Str::contains($column->getColumnDataType(), ['datetime', 'timestamp']) && $column->getDefaultValue() === 'CURRENT_TIMESTAMP';
     }
 
+    protected function isSoftDeletes(ColumnDefinition $column): bool
+    {
+        return (
+            $column->getColumnName() === 'deleted_at' &&
+            $column->isNullable() &&
+            ($column->getColumnDataType() === 'timestamp' || $column->getColumnDataType() === 'datetime')
+        );
+    }
+
     protected function tableName($type, $file = ''): string
     {
         $tableName = $this->tableDefinition->getTableName();
@@ -175,6 +204,9 @@ abstract class BaseFormatter
                 break;
             case 'ClassNameSingularRequest':
                 $tableName = Str::ucfirst(Str::camel(Str::singular($tableName)));
+                break;
+            case 'PascalSingular':
+                $tableName = Str::upper((Str::singular($tableName)));
                 break;
             default:
                 $suffix = match ($file) {
@@ -195,7 +227,7 @@ abstract class BaseFormatter
 
     protected function indentSpace($indentTab): string
     {
-        return Str::padLeft('', $indentTab * self::INDENT_SPACE_FORMAT_DEFAULT, ' ');
+        return Str::padLeft('', $indentTab * $this->indentSpaceDefault, ' ');
     }
 
     protected function cleanArray($array, $isSortKey = true): array
@@ -207,7 +239,7 @@ abstract class BaseFormatter
         return array_values($arrClean);
     }
 
-    private function renderArrayValue($value, $indentTab = 0): float|int|string
+    protected function renderArrayValue($value, $indentTab = 0): float|int|string
     {
         if (is_array($value)) {
             return "[\n{$this->arrayRender($value, $indentTab + 1)}\n{$this->indentSpace($indentTab)}]";
@@ -226,15 +258,15 @@ abstract class BaseFormatter
     {
         $comment = "{$this->indentSpace($indentTab)}/**\n";
         if (!empty($method['params'])) {
-            $comment .= implode("", array_map(fn($param) => "{$this->indentSpace($indentTab)}* @param {$param}\n", $method['params']));
+            $comment .= implode("", array_map(fn($param) => "{$this->indentSpace($indentTab)} * @param {$param}\n", $method['params']));
         }
         if (isset($method['returnType']) && 0 !== $method['returnType']) {
-            $comment .= "{$this->indentSpace($indentTab)}* @return {$method['returnType']}\n";
+            $comment .= "{$this->indentSpace($indentTab)} * @return {$method['returnType']}\n";
         } else {
-            $comment .= "{$this->indentSpace($indentTab)}* @return mixed\n";
+            $comment .= "{$this->indentSpace($indentTab)} * @return mixed\n";
         }
 
-        $comment .= "{$this->indentSpace($indentTab)}*/\n";
+        $comment .= "{$this->indentSpace($indentTab)} */\n";
 
         return $comment;
     }

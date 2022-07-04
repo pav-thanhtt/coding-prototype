@@ -1,0 +1,2 @@
+...route.query.{!columnName!}_from && { {!columnName!}_from: route.query.{!columnName!}_from },
+...route.query.{!columnName!}_to && { {!columnName!}_to: route.query.{!columnName!}_to },

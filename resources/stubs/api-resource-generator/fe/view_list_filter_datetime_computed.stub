@@ -1,0 +1,12 @@
+const {!columnCamel!}From = computed(
+  () =>
+    (typeof route.query.{!columnName!}_from === 'string'
+      ? moment(route.query.{!columnName!}_from, DATE_FORMAT)
+      : undefined)
+)
+const {!columnCamel!}To = computed(
+  () =>
+    (typeof route.query.{!columnName!}_to === 'string'
+      ? moment(route.query.{!columnName!}_to, DATE_FORMAT)
+      : undefined)
+)

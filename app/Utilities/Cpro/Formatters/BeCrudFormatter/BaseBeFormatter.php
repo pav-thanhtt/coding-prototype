@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\File;
 
 abstract class BaseBeFormatter extends BaseFormatter
 {
+    protected $indentSpaceDefault = 4;
+
     public function __construct(TableDefinition $tableDefinition)
     {
         parent::__construct($tableDefinition);

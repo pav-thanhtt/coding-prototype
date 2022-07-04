@@ -3,14 +3,14 @@
 declare(strict_types = 1);
 
 namespace App\Models;
-
+{{{renderClassSortableTrait}}}
 use EloquentFilter\Filterable;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 {{{renderClassSoftDeletes}}}
 class {{{tableName(ClassNameSingular)}}} extends Model
 {
-    use HasFactory, Filterable{{{renderUseSoftDeletes}}};
+    use HasFactory, Filterable{{{renderUseSoftDeletes}}}{{{renderUseSortableTrait}}};
 
 {{{renderProperty(1)}}}
 }

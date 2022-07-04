@@ -1,0 +1,2 @@
+...route.query.{!columnName!}_from && { {!columnName!}_from: {!columnCamel!}From.value },
+...route.query.{!columnName!}_to && { {!columnName!}_to: {!columnCamel!}To.value },

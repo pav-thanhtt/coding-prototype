@@ -1,0 +1,13 @@
+<a-tooltip
+  v-if="
+    record.{!columnName!} &&
+    record.{!columnName!}.length > CHARACTER_CELL_MAX_LENGTH
+  "
+  placement="bottomLeft"
+>
+  <template #title>
+    <span>{{ record.{!columnName!} }}</span>
+  </template>
+  {{ record.{!columnName!}.substr(0, CHARACTER_CELL_MAX_LENGTH) }}...
+</a-tooltip>
+<span v-else>{{ record.{!columnName!} }}</span>

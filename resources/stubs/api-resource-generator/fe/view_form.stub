@@ -1,0 +1,85 @@
+<template>
+  <a-layout>
+    <a-row align="middle">
+      <a-col flex="auto" class="form-title">
+        <span>{{ formName }} {{{tableName(ClassNameSingular)}}}</span>
+      </a-col>
+    </a-row>
+      <a-form
+        :model="current{{{tableName(ClassNameSingular)}}}"
+        :rules="rules"
+        @finish="onSubmit"
+        class="allu-form"
+      >
+{{{renderFormControls(4)}}}
+
+        <a-row :style="{ textAlign: 'center' }">
+          <a-col :span="8">
+            <a-form-item>
+              <Button @clickHandler="onCancel" btnClass="btn-right-margin">Cancel</Button>
+              <Button
+                htmlType="submit"
+                type="primary"
+              >
+                {{ formName }}
+              </Button>
+            </a-form-item>
+          </a-col>
+        </a-row>
+      </a-form>
+  </a-layout>
+</template>
+<script lang="ts">
+import {
+  defineComponent,
+  reactive,
+  onBeforeMount,
+  computed
+} from 'vue'
+import { useStore } from 'vuex'
+import { useRoute, useRouter } from 'vue-router'
+import Button from '@/components/commons/Button.vue'
+{{{renderImportDateFormat}}}
+export default defineComponent({
+  name: '{{{tableName(ClassNameSingular)}}}Create',
+  components: { Button },
+  setup () {
+    const route = useRoute()
+    const router = useRouter()
+    const store = useStore()
+    const {{{tableName(BindingName)}}}Detail = computed(() => store.state.{{{tableName(BindingName)}}}.{{{tableName(BindingName)}}}Detail)
+    const current{{{tableName(ClassNameSingular)}}} = reactive({
+{{{renderInitCurrent(3)}}}
+    })
+    const isCreate = route.params.id === undefined
+    const formName = isCreate ? 'Create' : 'Edit'
+    const rules = {
+{{{renderRules(3)}}}
+    }
+    onBeforeMount(async () => {
+      if (route.params.id !== undefined) {
+        await store.dispatch('{{{tableName(BindingName)}}}/show', route.params.id)
+        Object.assign(current{{{tableName(ClassNameSingular)}}}, {{{tableName(BindingName)}}}Detail.value)
+      }
+    })
+    const onSubmit = async () => {
+      if (isCreate) {
+        await store.dispatch('{{{tableName(BindingName)}}}/store', current{{{tableName(ClassNameSingular)}}})
+      } else {
+        await store.dispatch('{{{tableName(BindingName)}}}/update', { id: route.params.id, formState: current{{{tableName(ClassNameSingular)}}} })
+      }
+      router.push('/{{{tableName(BindingName)}}}')
+    }
+    const onCancel = () => {
+      router.back()
+    }
+    return {
+      formName,
+      current{{{tableName(ClassNameSingular)}}},{{{renderReturnDateFormat(3)}}}
+      onSubmit,
+      onCancel,
+      rules
+    }
+  }
+})
+</script>

@@ -1,0 +1,84 @@
+import { ActionContext } from 'vuex'
+import { {{{tableName(ClassNameSingular)}}}StoreType } from '@/types/stores/{{{tableName(ClassNameSingular)}}}StoreType'
+import RootState from '@/types/stores/RootState'
+import {{{tableName(ClassNameSingular)}}}FilterBody from '@/types/bodies/{{{tableName(ClassNameSingular)}}}FilterBody'
+import { Pagination, ResponseDetail, ResponseMessage } from '@/types/responses/Response'
+import {{{tableName(ClassNameSingular)}}} from '@/types/entities/{{{tableName(ClassNameSingular)}}}'
+import {{{tableName(ClassNameSingular)}}}Api from '@/apis/{{{tableName(ClassNameSingular)}}}Api'
+import {{{tableName(ClassNameSingular)}}}Body from '@/types/bodies/{{{tableName(ClassNameSingular)}}}Body'
+
+export default {
+  namespaced: true,
+
+  state: {
+    {{{tableName(ParamNamePlural)}}}: {
+      meta: {},
+      data: []
+    },
+    {{{tableName(BindingName)}}}Detail: {}
+  },
+  getters: {},
+  mutations: {
+    set{{{tableName(ClassNameSingular)}}}List (state: {{{tableName(ClassNameSingular)}}}StoreType, res: Pagination<{{{tableName(ClassNameSingular)}}}>): void {
+      state.{{{tableName(ParamNamePlural)}}} = res
+    },
+
+    delete{{{tableName(ClassNameSingular)}}} (state: {{{tableName(ClassNameSingular)}}}StoreType, id: {{{idType}}}): void {
+      const {{{tableName(ParamNamePlural)}}}Index = state.{{{tableName(ParamNamePlural)}}}.data.findIndex({{{tableName(BindingName)}}} => {{{tableName(BindingName)}}}.id === id)
+      state.{{{tableName(ParamNamePlural)}}}.data.splice({{{tableName(ParamNamePlural)}}}Index, 1)
+    },
+
+    set{{{tableName(ClassNameSingular)}}}Detail (state: {{{tableName(ClassNameSingular)}}}StoreType, res: ResponseDetail<{{{tableName(ClassNameSingular)}}}>): void {
+      state.{{{tableName(BindingName)}}}Detail = res.data
+    }
+  },
+  actions: {
+    async getList (
+      context: ActionContext<{{{tableName(ClassNameSingular)}}}StoreType, RootState>,
+      params: {{{tableName(ClassNameSingular)}}}FilterBody
+    ): Promise<Pagination<{{{tableName(ClassNameSingular)}}}>> {
+      return await {{{tableName(ClassNameSingular)}}}Api.getList(params).then((result) => {
+        context.commit('set{{{tableName(ClassNameSingular)}}}List', result)
+        return result
+      })
+    },
+
+    async show (
+      context: ActionContext<{{{tableName(ClassNameSingular)}}}StoreType, RootState>,
+      id: {{{idType}}}
+    ): Promise<ResponseDetail<{{{tableName(ClassNameSingular)}}}>> {
+      return await {{{tableName(ClassNameSingular)}}}Api.show(id).then((result) => {
+        context.commit('set{{{tableName(ClassNameSingular)}}}Detail', result)
+        return result
+      })
+    },
+
+    async store (
+      context: ActionContext<{{{tableName(ClassNameSingular)}}}StoreType, RootState>,
+      data: {{{tableName(ClassNameSingular)}}}Body
+    ): Promise<ResponseDetail<{{{tableName(ClassNameSingular)}}}>> {
+      return await {{{tableName(ClassNameSingular)}}}Api.store(data).then((result) => {
+        return result
+      })
+    },
+
+    async update (
+      context: ActionContext<{{{tableName(ClassNameSingular)}}}StoreType, RootState>,
+      req: { id: {{{idType}}}, formState: {{{tableName(ClassNameSingular)}}}Body }
+    ): Promise<ResponseMessage> {
+      return await {{{tableName(ClassNameSingular)}}}Api.update(req.id, req.formState).then((result) => {
+        return result
+      })
+    },
+
+    async delete (
+      context: ActionContext<{{{tableName(ClassNameSingular)}}}StoreType, RootState>,
+      id: {{{idType}}}
+    ): Promise<ResponseMessage> {
+      return await {{{tableName(ClassNameSingular)}}}Api.delete(id).then((result) => {
+        context.commit('delete{{{tableName(ClassNameSingular)}}}', id)
+        return result
+      })
+    }
+  }
+}

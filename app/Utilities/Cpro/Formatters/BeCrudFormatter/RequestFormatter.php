@@ -45,12 +45,7 @@ class RequestFormatter extends BaseBeFormatter
         $columns = $this->tableDefinition->getColumns();
         if ($type === 'search_request') {
             $rules = [
-                'page' => 'int|min:1',
-                'per_page' => 'int|min:1',
                 'keyword' => 'string',
-                'include' => '_@Rule::in([\'meta\'])',
-                'sort' => 'string',
-                'sort_direction' => '_@Rule::in([\'desc\', \'asc\'])',
             ];
 
             array_walk($columns,
@@ -64,7 +59,8 @@ class RequestFormatter extends BaseBeFormatter
                             $rules[$columnName] = $this->searchRuleValue($column);
                         }
                     }
-                });
+                }
+            );
 
             return $this->arrayRender($rules, $indentTab, true);
         }
@@ -92,6 +88,46 @@ class RequestFormatter extends BaseBeFormatter
 
     }
 
+    protected function renderClassRequestTrait(string $type) {
+        if ($type === 'search_request') {
+            return "\nuse App\Traits\RequestTrait;";
+        }
+    }
+
+    protected function renderUseRequestTrait(string $type) {
+        if ($type === 'search_request') {
+            return "use RequestTrait;\n\n    ";
+        }
+    }
+
+    protected function renderRequestSearchRules(string $type) {
+        if ($type === 'search_request') {
+            $result = ' + $this->getPaginationRules()';
+
+            if ($this->hasSorter()) {
+                $result .= ' + $this->getSortRules($this)';
+            }
+
+            return $result;
+        }
+    }
+
+    protected function renderRequestSearchPrepareForValidation(int $indentTab, string $type) {
+        if ($type === 'search_request') {
+            $method = [
+                'scope' => 'protected',
+                'methodName' => 'prepareForValidation',
+                'params' => [],
+                'returnType' => 'void',
+                'hasComment' => true,
+            ];
+
+            $method['content'] = sprintf('$this->merge($this->getPaginationInfo($this)%s);', $this->hasSorter() ? ' + $this->getSorter($this)' : '');
+
+            return "\n" . $this->methodRender([$method], $indentTab);
+        }
+    }
+
     private function isValidateField(ColumnDefinition $column): bool
     {
         $columnName = $column->getColumnName();
@@ -102,8 +138,8 @@ class RequestFormatter extends BaseBeFormatter
             $this->isCurrent($column) ||
             Str::contains($columnName, 'token') ||
             (
-                ($columnType === 'timestamp' || $columnType === 'datetime')
-                && preg_match('/_at$/', $columnName)
+                ($columnType === 'timestamp' || $columnType === 'datetime') &&
+                in_array($columnName, ['created_at', 'updated_at', 'deleted_at'])
             )
         );
     }
@@ -253,27 +289,8 @@ class RequestFormatter extends BaseBeFormatter
             'time' => 'date_format:H:i:s',
             'date' => 'date|date_format:Y/m/d',
             'year' => 'date_format:Y',
-            'timestamp' => 'date|date_format:Y/m/d H:i:s|after_or_equal:1970/01/01 00:00:01|before_or_equal:2038/01/19 03:14:07',
-            default => 'date|date_format:Y/m/d H:i:s',
+            default => 'date',
         };
-    }
-
-    public function renderClassRule($type): string
-    {
-        if ($this->hasUseEnumField($type)) {
-            return "use Illuminate\Validation\Rule;\n";
-        }
-
-        return '';
-    }
-
-    private function hasUseEnumField($type): bool
-    {
-        if ($type === 'search_request') {
-            return true;
-        }
-        $enumFields = DB::select("show columns from {$this->tableDefinition->getTableName()} where `Type` Like 'enum%';");
-        return count($enumFields) > 0;
     }
 
     private function searchRuleValue(ColumnDefinition $column): string

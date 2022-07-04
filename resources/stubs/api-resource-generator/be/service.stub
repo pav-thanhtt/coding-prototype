@@ -15,7 +15,7 @@ class {{{tableName(ClassNameSingular)}}}Service
     /**
      * @var {{{tableName(ClassNameSingular)}}}Repository
      */
-    private {{{tableName(ClassNameSingular)}}}Repository ${{{tableName(PropertyName)}}}Repo;
+    private ${{{tableName(PropertyName)}}}Repo;
 
     public function __construct({{{tableName(ClassNameSingular)}}}Repository ${{{tableName(PropertyName)}}}Repo)
     {
@@ -60,6 +60,6 @@ class {{{tableName(ClassNameSingular)}}}Service
      */
     public function delete({{{tableName(ClassNameSingular)}}} ${{{tableName(PropertyName)}}}): mixed
     {
-        return $this->{{{tableName(PropertyName)}}}Repo->destroy(${{{tableName(PropertyName)}}}->id);
+        return $this->{{{tableName(PropertyName)}}}Repo->destroy({{{renderPropId}}});
     }
 }

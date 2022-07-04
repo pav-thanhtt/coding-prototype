@@ -1,0 +1,6 @@
+{
+  title: '{!columnLabel!}',
+  dataIndex: '{!columnName!}',
+  key: '{!columnName!}',{!fixedText!}{!sorterText!}
+  slots: { customRender: '{!columnName!}' }
+},
