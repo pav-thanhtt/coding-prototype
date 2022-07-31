@@ -122,7 +122,8 @@ class RequestFormatter extends BaseBeFormatter
                 'hasComment' => true,
             ];
 
-            $method['content'] = sprintf('$this->merge($this->getPaginationInfo($this)%s);', $this->hasSorter() ? ' + $this->getSorter($this)' : '');
+            $method['content'] = sprintf('$this->merge($this->getPaginationPrepareForValidation($this)%s);',
+            $this->hasSorter() ? ' + $this->getSortPrepareForValidation($this)' : '');
 
             return "\n" . $this->methodRender([$method], $indentTab);
         }

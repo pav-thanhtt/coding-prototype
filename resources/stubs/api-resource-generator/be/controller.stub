@@ -46,8 +46,8 @@ class {{{tableName(ClassNameSingular)}}}Controller extends Controller
         ${{{tableName(ParamNamePlural)}}} = $this->{{{tableName(PropertyName)}}}Service->getList($request->validated());
 
         $meta = [];
-        if ('meta' === $request->query('include')) {
-            $meta = ['meta' => new MetaResource(${{{tableName(ParamNamePlural)}}})];
+        if (config('allu.META_RESPONSE_KEY') === $request->query('include')) {
+            $meta = [config('allu.META_RESPONSE_KEY') => new MetaResource(${{{tableName(ParamNamePlural)}}})];
         }
 
         return $this->success($meta + ['data' => {{{tableName(ClassNameSingular)}}}Resource::collection(${{{tableName(ParamNamePlural)}}}->items())]);
