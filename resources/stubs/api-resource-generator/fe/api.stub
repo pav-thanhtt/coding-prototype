@@ -16,7 +16,7 @@ export default class {{{tableName(ClassNameSingular)}}}Api {
   public static async getList (
     params?: {{{tableName(ClassNameSingular)}}}FilterBody
   ): Promise<Pagination<{{{tableName(ClassNameSingular)}}}>> {
-    return await api.get('/{{{tableName(ParamNamePlural)}}}', { params })
+    return await api.get('/{{{tableName(BindingName)}}}', { params })
   }
 
   /*
@@ -26,7 +26,7 @@ export default class {{{tableName(ClassNameSingular)}}}Api {
    */
 
   public static async show (id: {{{idType}}}): Promise<ResponseDetail<{{{tableName(ClassNameSingular)}}}>> {
-    return await api.get(`/{{{tableName(ParamNamePlural)}}}/${id}`)
+    return await api.get(`/{{{tableName(BindingName)}}}/${id}`)
   }
 
   /**
@@ -35,7 +35,7 @@ export default class {{{tableName(ClassNameSingular)}}}Api {
    * @return Promise|Error
    */
   public static async store (data: {{{tableName(ClassNameSingular)}}}Body): Promise<ResponseDetail<{{{tableName(ClassNameSingular)}}}>> {
-    return await api.post('/{{{tableName(ParamNamePlural)}}}', data)
+    return await api.post('/{{{tableName(BindingName)}}}', data)
   }
 
   /**
@@ -47,7 +47,7 @@ export default class {{{tableName(ClassNameSingular)}}}Api {
     id: {{{idType}}},
     data: {{{tableName(ClassNameSingular)}}}Body
   ): Promise<ResponseMessage> {
-    return await api.put(`/{{{tableName(ParamNamePlural)}}}/${id}`, data)
+    return await api.put(`/{{{tableName(BindingName)}}}/${id}`, data)
   }
 
   /**
@@ -56,6 +56,6 @@ export default class {{{tableName(ClassNameSingular)}}}Api {
    * @returns
    */
   public static async delete (id: {{{idType}}}): Promise<ResponseMessage> {
-    return await api.delete(`/{{{tableName(ParamNamePlural)}}}/${id}`)
+    return await api.delete(`/{{{tableName(BindingName)}}}/${id}`)
   }
 }
